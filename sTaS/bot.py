@@ -1,6 +1,10 @@
 import telebot
+import sqlite3
+import random
+from teletoken import token
 
-bot = telebot.TeleBot('1111678061:AAEWfiGdpB31txgZpFo3Y7KdDpPSAqiSApY')
+conn = sqlite3.connect('sTaS.db')
+bot = telebot.TeleBot(token)
 
 users_id = dict()
 
@@ -102,6 +106,9 @@ def tag_group(msg):
     else:
         bot.send_message(msg.chat.id, 'Ну и кого ты тегать собрался, дурик. Я шо ебу как вас зовут?')
 
+@bot.message_handler(commands=['try'])
+def try_text(msg):
+    bot.send_message(msg.chat.id, 'И правда)', reply_to_message_id=msg.message_id) if random.randint(0, 1) else bot.send_message(msg.chat.id, 'Пиздеж!!', reply_to_message_id=msg.message_id)
 
 
 bot.polling()
