@@ -1,6 +1,8 @@
 import telebot
 import teletoken
 import tools
+import gameplay
+import roles
 
 bot = telebot.TeleBot(teletoken.token)
 
@@ -35,6 +37,7 @@ def reg_user(msg):
     if players_id[msg.chat.id].state == 'reg':
         if msg.from_user.id not in players_id[msg.chat.id].players:
             players_id[msg.chat.id].players[msg.from_user.id] = None
+            players_id[msg.chat.id].players_nick_to_id['@' + msg.from_user.username] = msg.from_user.id
         bot.reply_to(msg, 'You`re registered!')
     else:
         bot.reply_to(msg, 'Game is on!')
@@ -59,6 +62,20 @@ def end_reg(msg):
             bot.reply_to(msg, 'You`re not creator of this game!')
         players_id[msg.chat.id].state = 'game'
     print(players_id[msg.chat.id].players)
+
+
+@bot.message_handler(commands=['vote_for_expedition'])
+def voter(msg):
+    if len(msg.text.split()) < 4:
+        bot.reply_to(msg, 'To few expeditors')
+    else:
+        exp_id = []
+        nicks = msg.text.split()
+        nicks.pop(0)
+        for nick in nicks:
+            print(nick)
+            exp_id.append(players_id[msg.chat.id].players_nick_to_id[nick])
+        gameplay.vote_for_exp(exp_id, msg.chat.id)
 
 
 bot.polling()
