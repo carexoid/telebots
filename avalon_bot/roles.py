@@ -38,7 +38,7 @@ def shuffle_roles(size, additional):
 
     if len(roles) > size:
         print('ERROR')
-
+        #TODO restart the game
 
     random.shuffle(roles)
     return roles
@@ -48,7 +48,7 @@ def make_roles(roles, additional):
     roles_list = shuffle_roles(len(roles), additional)
     index = 0
     roles_description = {
-        'Loyal Servant of Arthur': 'You are a loyal servant of King Arthur, so your main goal is no to fail mission',
+        'Loyal Servant of Arthur': 'You are a loyal servant of King Arthur, so your main goal is complete the missions',
         'Merlin': "Merlin learns Mordred's followers when the game begins. Merlin must steer the knights correctly "
                   "without it being obvious they know who all the minions are, which means they must make deductions "
                   "based on actions taken by players in the game.",
