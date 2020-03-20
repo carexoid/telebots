@@ -1,5 +1,11 @@
 class GameInfo:
 
+    additional_roles = {
+            'Morgana': False,
+            'Mordred': False,
+            'Oberon': False
+        }
+
     def __init__(self, state, creator, players, cur_king=None, cur_lady=None):
         self.state = state
         self.creator = creator

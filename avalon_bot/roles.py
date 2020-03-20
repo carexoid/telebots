@@ -6,6 +6,9 @@ bot = telebot.TeleBot(teletoken.token)
 
 
 def shuffle_roles(size, additional):
+    if size < 5:
+        print("ERROR")
+        #TODO error
     roles = []
     if size == 5:
         roles = ['Loyal Servant of Arthur', 'Merlin', 'Percival',
