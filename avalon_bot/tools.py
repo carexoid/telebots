@@ -15,3 +15,4 @@ class GameInfo:
         self.successful_exp = 0
         self.failed_exp = 0
         self.exp_size = []
+        self.players_nick_to_id = dict()
