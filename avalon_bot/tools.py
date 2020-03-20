@@ -8,3 +8,8 @@ class GameInfo:
         self.cur_lady = cur_lady
         self.successful_exp = 0
         self.failed_exp = 0
+        self.additional_roles = {
+            'Morgana': False,
+            'Mordred': False,
+            'Oberon': False
+        }
