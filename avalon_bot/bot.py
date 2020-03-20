@@ -51,4 +51,5 @@ def end_reg(msg):
     print(players_id[msg.chat.id].players)
 
 
+
 bot.polling()
