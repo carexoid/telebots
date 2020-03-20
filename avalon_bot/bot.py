@@ -21,6 +21,7 @@ def start_reg(msg):
         return
     bot.reply_to(msg, ('Game' if players_id[msg.chat.id].state == 'game' else 'Registration') + ' is on!')
 
+
 @bot.message_handler(commands=['reg_me'])
 def reg_user(msg):
     try:
@@ -28,9 +29,13 @@ def reg_user(msg):
     except KeyError:
         bot.reply_to(msg, 'No registration started!\nRun /start_registration')
         return
-    if msg.from_user.id not in players_id[msg.chat.id].players:
-        players_id[msg.chat.id].players[msg.from_user.id] = None
-    bot.reply_to(msg, 'You`re registered!')
+    if players_id[msg.chat.id].state == 'reg':
+        if msg.from_user.id not in players_id[msg.chat.id].players:
+            players_id[msg.chat.id].players[msg.from_user.id] = None
+        bot.reply_to(msg, 'You`re registered!')
+    else:
+        bot.reply_to(msg, 'Game is on!')
+
 
 @bot.message_handler(commands=['end_registration'])
 def end_reg(msg):
