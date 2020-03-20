@@ -1,6 +1,7 @@
 import telebot
 import teletoken
 import tools
+import roles
 
 bot = telebot.TeleBot(teletoken.token)
 
@@ -50,6 +51,7 @@ def end_reg(msg):
         if msg.from_user.id == players_id[msg.chat.id].creator:
             # players_id[msg.chat.id].players = role.make_roles(players_id[msg.chat.id].players)
             bot.send_message(msg.from_user.id, " You have launched the game in" + str(msg.chat.id))
+            roles.make_roles(players_id[msg.chat.id].players, tools.GameInfo.additional_roles)
         else:
             bot.reply_to(msg, 'You`re not creator of this game!')
         players_id[msg.chat.id].state = 'game'
