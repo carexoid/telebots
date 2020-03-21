@@ -1,8 +1,9 @@
 import random
 import telebot
 import teletoken
+import bot
 
-bot = telebot.TeleBot(teletoken.token)
+botbot = telebot.TeleBot(teletoken.token)
 
 
 def shuffle_roles(size, additional):
@@ -30,15 +31,11 @@ def shuffle_roles(size, additional):
                  'Loyal Servant of Arthur', 'Merlin', 'Percival', 'Assassin']
 
     for key in additional:
-        if additional[key]:
+        if additional[key] and len(roles) <= size:
             roles.append(key)
 
     while len(roles) < size:
         roles.append('Minion of Mordred')
-
-    if len(roles) > size:
-        print('ERROR')
-        #TODO restart the game
 
     random.shuffle(roles)
     return roles
@@ -83,6 +80,6 @@ def make_roles(roles, additional):
         index = index + 1
     for key in roles:
         send_text = "Your role is " + roles[key]
-        bot.send_message(key, send_text)
-        bot.send_message(key, roles_description[roles[key]])
+        botbot.send_message(key, send_text)
+        botbot.send_message(key, roles_description[roles[key]])
     return roles
