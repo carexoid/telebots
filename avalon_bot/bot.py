@@ -77,6 +77,8 @@ def voter(msg):
             print(nick)
             exp_id.append(players_id[msg.chat.id].players_nick_to_id[nick])
         gameplay.vote_for_exp(exp_id, msg.chat.id)
+        players_id[msg.chat.id].cur_exp = exp_id
+        players_id[msg.chat.id].state = 'vote'
 
 
 @bot.message_handler(commands=['abort'])
@@ -91,26 +93,35 @@ def abort(msg):
         bot.reply_to(msg, 'No game to be aborted')
 
 
-@bot.message_handler(func=lambda message: "I like this expedition in chat " in message.text
-                                          or 'I don`t like it in chat ' in message.text)
+@bot.message_handler(func=lambda message: message.text and ("I like this expedition in chat " in message.text
+                                          or 'I don`t like it in chat ' in message.text))
 def get_vote(msg):
-    print(msg.text)
-    chat_id = int(msg.text.split().pop())
-    print(chat_id)
-    if not players_id[chat_id].cur_voting_for_exp[msg.from_user.id]:
-        players_id[chat_id].cur_voting_for_exp[msg.from_user.id] = (1 if msg.text.split()[1] == 'like' else -1)
-    sum = 0
-    people_votes = ''
-    for vote in players_id[chat_id].cur_voting_for_exp.values():
-        if not vote:
-            return
-        sum += int(vote)
-    for player in players_id[chat_id].cur_voting_for_exp.keys():
-        people_votes += '\n@' + str(bot.get_chat_member(chat_id, msg.from_user.id).user.username) \
-                        + (' +1' if players_id[chat_id].cur_voting_for_exp[player] == 1 else ' -1')
-    bot.send_message(chat_id,
-                     ('there will be such expedition' if sum > 0 else 'There won`t be such expedition') + people_votes)
-
+    try:
+        print(msg.text)
+        chat_id = int(msg.text.split().pop())
+        print(chat_id)
+        if not players_id[chat_id].cur_voting_for_exp[msg.from_user.id]:
+            players_id[chat_id].cur_voting_for_exp[msg.from_user.id] = (1 if msg.text.split()[1] == 'like' else -1)
+            keyboard = telebot.types.ReplyKeyboardMarkup()
+            bot.send_message(msg.chat.id, "You voted for this expedition", reply_markup=None)
+        sum = 0
+        people_votes = ''
+        for vote in players_id[chat_id].cur_voting_for_exp.values():
+            if not vote:
+                return
+            sum += int(vote)
+        for player in players_id[chat_id].cur_voting_for_exp.keys():
+            people_votes += '\n@' + str(bot.get_chat_member(chat_id, player).user.username) \
+                            + (' +1' if players_id[chat_id].cur_voting_for_exp[player] == 1 else ' -1')
+        bot.send_message(chat_id,
+                         ('there will be such expedition' if sum > 0 else 'There won`t be such expedition') + people_votes)
+        if sum > 0:
+            players_id[chat_id].state = 'exp'
+            gameplay.start_exp(players_id[chat_id].cur_exp, chat_id)
+        else:
+            players_id[chat_id].state = 'game'
+    except KeyError:
+        print('bot durila')
 
 
 
