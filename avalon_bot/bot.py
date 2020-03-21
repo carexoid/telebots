@@ -43,7 +43,6 @@ def reg_user(msg):
         bot.reply_to(msg, 'Game is on!')
 
 
-
 @bot.message_handler(commands=['end_registration'])
 def end_reg(msg):
     try:
@@ -110,8 +109,6 @@ def get_vote(msg):
                         + (' +1' if players_id[chat_id].cur_voting_for_exp[player] == 1 else ' -1')
     bot.send_message(chat_id,
                      ('there will be such expedition' if sum > 0 else 'There won`t be such expedition') + people_votes)
-
-
 
 
 bot.polling()
