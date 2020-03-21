@@ -78,4 +78,24 @@ def voter(msg):
         gameplay.vote_for_exp(exp_id, msg.chat.id)
 
 
+@bot.message_handler(func=lambda message: "I like this expedition in chat " in message.text
+                                          or 'I don`t like it in chat ' in message.text)
+def get_vote(msg):
+    chat_id = int(msg.text.split().pop())
+    if not players_id[chat_id].cur_voting_for_exp[msg.from_user.id]:
+        players_id[chat_id].cur_voting_for_exp[msg.from_user.id] = (1 if msg.text.split()[1] == 'like' else -1)
+    sum = 0
+    people_votes = ''
+    for vote in players_id[chat_id].cur_voting_for_exp.values():
+        if not vote:
+            return
+        sum += int(vote)
+    for player in players_id[chat_id].cur_voting_for_exp.keys():
+        people_votes += '\n' + player + (' +1' if players_id[chat_id].cur_voting_for_exp[player] == 1 else ' -1')
+    bot.send_message(chat_id,
+                     ('there will be such expedition' if sum > 0 else 'There won`t be such expedition') + people_votes)
+
+
+
+
 bot.polling()

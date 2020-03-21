@@ -16,3 +16,4 @@ class GameInfo:
         self.failed_exp = 0
         self.exp_size = []
         self.players_nick_to_id = dict()
+        self.cur_voting_for_exp = players
