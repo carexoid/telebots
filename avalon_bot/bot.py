@@ -66,16 +66,20 @@ def end_reg(msg):
 
 @bot.message_handler(commands=['add_roles'])
 def add_roles(msg):
-    if players_id[msg.chat.id].state == 'game':
-        bot.reply_to(msg, "The game has already started")
-    else:
-        keyboard = telebot.types.InlineKeyboardMarkup()
-        morgana_button = telebot.types.InlineKeyboardButton(text="Morgana", callback_data="Morgana")
-        mordred_button = telebot.types.InlineKeyboardButton(text="Mordred", callback_data="Mordred")
-        oberon_button = telebot.types.InlineKeyboardButton(text="Oberon", callback_data="Oberon")
-        lady_button = telebot.types.InlineKeyboardButton(text="Lady of the Lake", callback_data="Lady")
-        keyboard.add(mordred_button, morgana_button, oberon_button, lady_button)
-        bot.send_message(msg.chat.id, "What role do you want to add?", reply_markup=keyboard)
+    try:
+
+        if players_id[msg.chat.id].state == 'game':
+            bot.reply_to(msg, "The game has already started")
+        else:
+            keyboard = telebot.types.InlineKeyboardMarkup()
+            morgana_button = telebot.types.InlineKeyboardButton(text="Morgana", callback_data="Morgana")
+            mordred_button = telebot.types.InlineKeyboardButton(text="Mordred", callback_data="Mordred")
+            oberon_button = telebot.types.InlineKeyboardButton(text="Oberon", callback_data="Oberon")
+            lady_button = telebot.types.InlineKeyboardButton(text="Lady of the Lake", callback_data="Lady")
+            keyboard.add(mordred_button, morgana_button, oberon_button, lady_button)
+            bot.send_message(msg.chat.id, "What role do you want to add?", reply_markup=keyboard)
+    except KeyError:
+        bot.reply_to(msg, 'No registration started\nRun /start_registration')
 
 
 @bot.callback_query_handler(func=lambda call: True)
