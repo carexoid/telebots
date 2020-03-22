@@ -6,6 +6,15 @@ class GameInfo:
             'Oberon': False
         }
 
+    lady_lake = False
+
+    expedition_size = {5:  [2, 3, 2, 3, 3],
+                       6:  [2, 3, 4, 3, 4],
+                       7:  [2, 3, 3, 4, 4],
+                       8:  [3, 4, 4, 5, 5],
+                       9:  [3, 4, 4, 5, 5],
+                       10: [3, 4, 4, 5, 5]}
+
     def __init__(self, state, creator, players, cur_king=None, cur_lady=None):
         self.state = state
         self.creator = creator

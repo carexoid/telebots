@@ -43,7 +43,6 @@ def reg_user(msg):
         bot.reply_to(msg, 'Game is on!')
 
 
-
 @bot.message_handler(commands=['end_registration'])
 def end_reg(msg):
     try:
@@ -63,6 +62,39 @@ def end_reg(msg):
             bot.reply_to(msg, 'You`re not creator of this game!')
         players_id[msg.chat.id].state = 'game'
     print(players_id[msg.chat.id].players)
+
+
+@bot.message_handler(commands=['add_roles'])
+def add_roles(msg):
+    if players_id[msg.chat.id].state == 'game':
+        bot.reply_to(msg, "The game has already started")
+    else:
+        keyboard = telebot.types.InlineKeyboardMarkup()
+        morgana_button = telebot.types.InlineKeyboardButton(text="Morgana", callback_data="Morgana")
+        mordred_button = telebot.types.InlineKeyboardButton(text="Mordred", callback_data="Mordred")
+        oberon_button = telebot.types.InlineKeyboardButton(text="Oberon", callback_data="Oberon")
+        lady_button = telebot.types.InlineKeyboardButton(text="Lady of the Lake", callback_data="Lady")
+        keyboard.add(mordred_button, morgana_button, oberon_button, lady_button)
+        bot.send_message(msg.chat.id, "What role do you want to add?", reply_markup=keyboard)
+
+
+@bot.callback_query_handler(func=lambda call: True)
+def callback_inline(call):
+    if call.message:
+        if call.data == "Lady":
+            if tools.GameInfo.lady_lake:
+                bot.send_message(call.message.chat.id, "Lady of the Lake has removed")
+                tools.GameInfo.lady_lake = False
+            else:
+                bot.send_message(call.message.chat.id, "Lady of the Lake has added")
+                tools.GameInfo.lady_lake = True
+        else:
+            if tools.GameInfo.additional_roles[call.data]:
+                bot.send_message(call.message.chat.id, call.data + " has removed")
+                tools.GameInfo.additional_roles[call.data] = False
+            else:
+                bot.send_message(call.message.chat.id, call.data + " has added")
+                tools.GameInfo.additional_roles[call.data] = True
 
 
 @bot.message_handler(commands=['vote_for_expedition'])
@@ -122,7 +154,5 @@ def get_vote(msg):
             players_id[chat_id].state = 'game'
     except KeyError:
         print('bot durila')
-
-
 
 bot.polling()
