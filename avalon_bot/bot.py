@@ -57,7 +57,7 @@ def end_reg(msg):
             # players_id[msg.chat.id].players = role.make_roles(players_id[msg.chat.id].players)
             players_id[msg.chat.id].cur_voting_for_exp = dict.copy(players_id[msg.chat.id].players)
             bot.send_message(msg.from_user.id, " You have launched the game in" + str(msg.chat.id))
-            roles.make_roles(players_id[msg.chat.id].players, tools.GameInfo.additional_roles)
+            roles.make_roles(players_id[msg.chat.id].players, players_id[msg.chat.id].additional_roles)
         else:
             bot.reply_to(msg, 'You`re not creator of this game!')
         players_id[msg.chat.id].state = 'game'
@@ -75,7 +75,7 @@ def add_roles(msg):
             morgana_button = telebot.types.InlineKeyboardButton(text="Morgana", callback_data="Morgana")
             mordred_button = telebot.types.InlineKeyboardButton(text="Mordred", callback_data="Mordred")
             oberon_button = telebot.types.InlineKeyboardButton(text="Oberon", callback_data="Oberon")
-            lady_button = telebot.types.InlineKeyboardButton(text="Lady of the Lake", callback_data="Lady")
+            lady_button = telebot.types.InlineKeyboardButton(text="Lady of the Lake", callback_data="Lady of the Lake")
             keyboard.add(mordred_button, morgana_button, oberon_button, lady_button)
             bot.send_message(msg.chat.id, "What role do you want to add?", reply_markup=keyboard)
     except KeyError:
@@ -85,20 +85,12 @@ def add_roles(msg):
 @bot.callback_query_handler(func=lambda call: True)
 def callback_inline(call):
     if call.message:
-        if call.data == "Lady":
-            if tools.GameInfo.lady_lake:
-                bot.send_message(call.message.chat.id, "Lady of the Lake has removed")
-                tools.GameInfo.lady_lake = False
-            else:
-                bot.send_message(call.message.chat.id, "Lady of the Lake has added")
-                tools.GameInfo.lady_lake = True
+        if call.data == "Lady of the Lake":
+            out = players_id[call.message.chat.id].change_lady()
+            bot.send_message(call.message.chat.id, call.data + out)
         else:
-            if tools.GameInfo.additional_roles[call.data]:
-                bot.send_message(call.message.chat.id, call.data + " has removed")
-                tools.GameInfo.additional_roles[call.data] = False
-            else:
-                bot.send_message(call.message.chat.id, call.data + " has added")
-                tools.GameInfo.additional_roles[call.data] = True
+            out = players_id[call.message.chat.id].change_roles(call.data)
+            bot.send_message(call.message.chat.id, call.data + out)
 
 
 @bot.message_handler(commands=['vote_for_expedition'])

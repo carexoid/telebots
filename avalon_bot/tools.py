@@ -1,13 +1,5 @@
 class GameInfo:
 
-    additional_roles = {
-            'Morgana': False,
-            'Mordred': False,
-            'Oberon': False
-        }
-
-    lady_lake = False
-
     expedition_size = {5:  [2, 3, 2, 3, 3],
                        6:  [2, 3, 4, 3, 4],
                        7:  [2, 3, 3, 4, 4],
@@ -27,3 +19,26 @@ class GameInfo:
         self.players_nick_to_id = dict()
         self.cur_voting_for_exp = dict.copy(players)
         self.cur_exp = []
+        self.additional_roles = {
+            'Morgana': False,
+            'Mordred': False,
+            'Oberon': False
+        }
+        self.lady_lake = False
+
+
+    def change_roles(self, role):
+        if self.additional_roles[role]:
+            self.additional_roles[role] = False
+            return " has removed"
+        else:
+            self.additional_roles[role] = True
+            return " has added"
+
+    def change_lady(self):
+        if self.lady_lake:
+            self.lady_lake = False
+            return " has removed"
+        else:
+            self.lady_lake = True
+            return " has added"
