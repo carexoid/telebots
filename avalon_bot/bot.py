@@ -67,7 +67,12 @@ def end_reg(msg):
                           + str(bot.get_chat_member(msg.chat.id, players_id[msg.chat.id].order[i]).user.username)
             bot.send_message(msg.chat.id, 'Players order:' + string)
             players_id[msg.chat.id].cur_king = 0
-            players_id[msg.chat.id].cur_king = -1
+            players_id[msg.chat.id].cur_lady = -1
+            king_id = players_id[msg.chat.id].order[players_id[msg.chat.id].cur_king]
+            bot.send_message(msg.chat.id, "King is @" + str(bot.get_chat_member(msg.chat.id, king_id).user.username))
+            if players_id[msg.chat.id].lady_lake:
+                lady_id = players_id[msg.chat.id].order[players_id[msg.chat.id].cur_lady]
+                bot.send_message(msg.chat.id, "Lady of the Lake is @" + str(bot.get_chat_member(msg.chat.id, lady_id).user.username))
         else:
             bot.reply_to(msg, 'You`re not creator of this game!')
         players_id[msg.chat.id].state = 'game'
@@ -105,7 +110,6 @@ def callback_inline(call):
                 bot.send_message(chat_id, "Mordred wins")
             else:
                 bot.send_message(chat_id, 'Avalon wins')
-
 
         elif call.data == "Lady of the Lake":
             out = players_id[chat_id].change_lady()
