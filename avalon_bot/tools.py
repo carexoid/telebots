@@ -26,6 +26,7 @@ class GameInfo:
         }
         self.lady_lake = False
         self.order = []
+        self.checked = []
 
     def change_roles(self, role):
         if self.additional_roles[role]:

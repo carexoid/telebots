@@ -68,6 +68,7 @@ def end_reg(msg):
             bot.send_message(msg.chat.id, 'Players order:' + string)
             players_id[msg.chat.id].cur_king = 0
             players_id[msg.chat.id].cur_lady = -1
+            players_id[msg.chat.id].checked.append(players_id[msg.chat.id].order[-1])
             king_id = players_id[msg.chat.id].order[players_id[msg.chat.id].cur_king]
             bot.send_message(msg.chat.id, "King is @" + str(bot.get_chat_member(msg.chat.id, king_id).user.username))
             if players_id[msg.chat.id].lady_lake:
