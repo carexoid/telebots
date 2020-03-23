@@ -17,3 +17,6 @@ def start_exp(expeditors, chat_id):
     for player_id in expeditors:
         bot.send_message(player_id, 'Your choice in expedition', reply_markup=keyboard)
 
+
+def exp_successful (red_cards, num_of_expeditors, num_of_exp):
+    return red_cards == num_of_expeditors

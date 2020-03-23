@@ -15,7 +15,7 @@ class GameInfo:
         self.cur_lady = cur_lady
         self.successful_exp = 0
         self.failed_exp = 0
-        self.exp_size = []
+        self.exp_size = [0, 0, 0, 0, 0]
         self.players_nick_to_id = dict()
         self.cur_voting_for_exp = dict.copy(players)
         self.cur_exp = []
@@ -42,3 +42,5 @@ class GameInfo:
         else:
             self.lady_lake = True
             return " has added"
+
+        self.people_in_exp = dict()
