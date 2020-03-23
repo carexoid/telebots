@@ -138,20 +138,26 @@ def callback_inline(call):
 
 @bot.message_handler(commands=['vote_for_expedition'])
 def voter(msg):
-    if len(msg.text.split()) < 1:
-        bot.reply_to(msg, 'To few expeditors')
-    else:
-        exp_id = []
-        nicks = msg.text.split()
-        nicks.pop(0)
-        for nick in nicks:
-            print(nick)
-            exp_id.append(players_id[msg.chat.id].players_nick_to_id[nick])
-        for player in players_id[msg.chat.id].players.keys():
-            players_id[msg.chat.id].cur_voting_for_exp[player] = None
-        gameplay.vote_for_exp(exp_id, msg.chat.id)
-        players_id[msg.chat.id].cur_exp = exp_id
-        players_id[msg.chat.id].state = 'vote'
+    try:
+        if msg.from_user.id != players_id[msg.chat.id].order[players_id[msg.chat.id].cur_king]:
+            bot.reply_to(msg, 'You aren`t the king, durik!!!')
+            return
+        if len(msg.text.split()) < 1:
+            bot.reply_to(msg, 'To few expeditors')
+        else:
+            exp_id = []
+            nicks = msg.text.split()
+            nicks.pop(0)
+            for nick in nicks:
+                print(nick)
+                exp_id.append(players_id[msg.chat.id].players_nick_to_id[nick])
+            for player in players_id[msg.chat.id].players.keys():
+                players_id[msg.chat.id].cur_voting_for_exp[player] = None
+            gameplay.vote_for_exp(players_id[msg.chat.id].order, msg.chat.id)
+            players_id[msg.chat.id].cur_exp = exp_id
+            players_id[msg.chat.id].state = 'vote'
+    except KeyError:
+        bot.reply_to(msg, 'No registration started\nRun /start_registration')
 
 
 @bot.message_handler(commands=['abort'])
@@ -199,6 +205,12 @@ def get_vote(msg):
             else:
                 players_id[chat_id].state = 'game'
                 players_id[chat_id].king_rotation()
+                string = ''
+                for i in range(0, len(players_id[chat_id].order)):
+                    string += '\n' + str(i + 1) + '. @' \
+                              + str(bot.get_chat_member(chat_id, players_id[chat_id].order[i]).user.username)
+                bot.send_message(chat_id, 'Players order:' + string)
+                bot.send_message(chat_id, 'New King is @' + str(bot.get_chat_member(chat_id, players_id[chat_id].order[players_id[chat_id].cur_king]).user.username))
         else:
             bot.reply_to(msg, 'No voting for expedition right now!')
 
@@ -222,11 +234,13 @@ def get_exp_choice(msg):
             sum += choice
         print(sum)
         num_of_exp = players_id[chat_id].successful_exp + players_id[chat_id].failed_exp
-        if gameplay.exp_successful(sum, len(players_id[chat_id].people_in_exp), num_of_exp):
-            bot.send_message(chat_id, 'Expedition was successful')
+        exp_res = gameplay.exp_successful(sum, len(players_id[chat_id].people_in_exp), num_of_exp, len(players_id[chat_id].order))
+        print(exp_res)
+        if exp_res[0]:
+            bot.send_message(chat_id, 'Expedition was successful\nNum of black cards is ' + str(exp_res[1]))
             players_id[chat_id].successful_exp += 1
         else:
-            bot.send_message(chat_id, 'Expedition was failed')
+            bot.send_message(chat_id, 'Expedition was failed\nNum of black cards is ' + str(exp_res[1]))
             players_id[chat_id].failed_exp += 1
         if players_id[chat_id].failed_exp == 3:
             bot.send_message(chat_id, 'RIP Avalon!')
@@ -243,6 +257,12 @@ def get_exp_choice(msg):
         else:
             players_id[chat_id].state = 'game'
             players_id[chat_id].king_rotation()
+            string = ''
+            for i in range(0, len(players_id[chat_id].order)):
+                string += '\n' + str(i + 1) + '. @' \
+                          + str(bot.get_chat_member(chat_id, players_id[chat_id].order[i]).user.username)
+            bot.send_message(chat_id, 'Players order:' + string)
+            bot.send_message(chat_id, 'New King is @' + str(bot.get_chat_member(chat_id, players_id[chat_id].order[players_id[chat_id].cur_king]).user.username))
             if (players_id[chat_id].get_num_of_exp() > 1):
                 gameplay.lady_check(chat_id, players_id[chat_id])
 
