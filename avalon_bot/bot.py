@@ -194,7 +194,7 @@ def get_exp_choice(msg):
         elif players_id[chat_id].successful_exp == 3:
             bot.send_message(chat_id, 'Time to shot for Assasin')
         else:
-            players_id[chat_id].state == 'game'
+            players_id[chat_id].state = 'game'
 
     except KeyError:
         print('bot durila x2')
