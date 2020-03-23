@@ -73,7 +73,8 @@ def end_reg(msg):
             bot.send_message(msg.chat.id, "King is @" + str(bot.get_chat_member(msg.chat.id, king_id).user.username))
             if players_id[msg.chat.id].lady_lake:
                 lady_id = players_id[msg.chat.id].order[players_id[msg.chat.id].cur_lady]
-                bot.send_message(msg.chat.id, "Lady of the Lake is @" + str(bot.get_chat_member(msg.chat.id, lady_id).user.username))
+                bot.send_message(msg.chat.id,
+                                 "Lady of the Lake is @" + str(bot.get_chat_member(msg.chat.id, lady_id).user.username))
         else:
             bot.reply_to(msg, 'You`re not creator of this game!')
         players_id[msg.chat.id].state = 'game'
@@ -115,9 +116,24 @@ def callback_inline(call):
         elif call.data == "Lady of the Lake":
             out = players_id[chat_id].change_lady()
             bot.send_message(chat_id, call.data + out)
-        else:
+        elif call.data == "Morgana" or call.data == "Oberon" or call.data == "Mordred":
             out = players_id[chat_id].change_roles(call.data)
             bot.send_message(chat_id, call.data + out)
+
+        else:
+            data = call.data.split()
+            nickname = str(bot.get_chat_member(data[1], data[0]).user.username)
+            chat = int(data[1])
+            user = int(data[0])
+            lady_id = players_id[chat].order[players_id[chat].cur_lady]
+            bot.send_message(chat, "Lady of the Lake has checked @" + nickname)
+            check = ''
+            if players_id[chat].players[user] == 'Merlin' or players_id[chat].players[user] == 'Persival' or \
+                    players_id[chat].players[user] == 'Loyal Servant of Arthur':
+                check = " is servant of Arthur"
+            else:
+                check = " is servant od Mordred"
+            bot.send_message(lady_id, nickname + check)
 
 
 @bot.message_handler(commands=['vote_for_expedition'])
