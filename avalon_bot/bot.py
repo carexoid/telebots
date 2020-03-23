@@ -122,20 +122,26 @@ def callback_inline(call):
 
 @bot.message_handler(commands=['vote_for_expedition'])
 def voter(msg):
-    if len(msg.text.split()) < 1:
-        bot.reply_to(msg, 'To few expeditors')
-    else:
-        exp_id = []
-        nicks = msg.text.split()
-        nicks.pop(0)
-        for nick in nicks:
-            print(nick)
-            exp_id.append(players_id[msg.chat.id].players_nick_to_id[nick])
-        for player in players_id[msg.chat.id].players.keys():
-            players_id[msg.chat.id].cur_voting_for_exp[player] = None
-        gameplay.vote_for_exp(exp_id, msg.chat.id)
-        players_id[msg.chat.id].cur_exp = exp_id
-        players_id[msg.chat.id].state = 'vote'
+    try:
+        if msg.from_user.id != players_id[msg.chat.id].order[players_id[msg.chat.id].cur_king]:
+            bot.reply_to(msg, 'You aren`t the king, durik!!!')
+            return
+        if len(msg.text.split()) < 1:
+            bot.reply_to(msg, 'To few expeditors')
+        else:
+            exp_id = []
+            nicks = msg.text.split()
+            nicks.pop(0)
+            for nick in nicks:
+                print(nick)
+                exp_id.append(players_id[msg.chat.id].players_nick_to_id[nick])
+            for player in players_id[msg.chat.id].players.keys():
+                players_id[msg.chat.id].cur_voting_for_exp[player] = None
+            gameplay.vote_for_exp(players_id[msg.chat.id].order, msg.chat.id)
+            players_id[msg.chat.id].cur_exp = exp_id
+            players_id[msg.chat.id].state = 'vote'
+    except KeyError:
+        bot.reply_to(msg, 'No registration started\nRun /start_registration')
 
 
 @bot.message_handler(commands=['abort'])
