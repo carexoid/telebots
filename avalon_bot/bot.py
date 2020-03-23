@@ -187,6 +187,7 @@ def get_exp_choice(msg):
                 return
             sum += choice
         print(sum)
+
         num_of_exp = players_id[chat_id].successful_exp + players_id[chat_id].failed_exp
         if gameplay.exp_successful(sum, len(players_id[chat_id].people_in_exp), num_of_exp):
             bot.send_message(chat_id, 'Expedition was successful')
