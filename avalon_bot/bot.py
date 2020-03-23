@@ -189,6 +189,12 @@ def get_vote(msg):
             else:
                 players_id[chat_id].state = 'game'
                 players_id[chat_id].king_rotation()
+                string = ''
+                for i in range(0, len(players_id[chat_id].order)):
+                    string += '\n' + str(i + 1) + '. @' \
+                              + str(bot.get_chat_member(chat_id, players_id[chat_id].order[i]).user.username)
+                bot.send_message(chat_id, 'Players order:' + string)
+                bot.send_message(chat_id, 'New King is @' + str(bot.get_chat_member(chat_id, players_id[chat_id].order[players_id[chat_id].cur_king]).user.username))
         else:
             bot.reply_to(msg, 'No voting for expedition right now!')
 
@@ -212,11 +218,13 @@ def get_exp_choice(msg):
             sum += choice
         print(sum)
         num_of_exp = players_id[chat_id].successful_exp + players_id[chat_id].failed_exp
-        if gameplay.exp_successful(sum, len(players_id[chat_id].people_in_exp), num_of_exp):
-            bot.send_message(chat_id, 'Expedition was successful')
+        exp_res = gameplay.exp_successful(sum, len(players_id[chat_id].people_in_exp), num_of_exp, len(players_id[chat_id].order))
+        print(exp_res)
+        if exp_res[0]:
+            bot.send_message(chat_id, 'Expedition was successful\nNum of black cards is ' + str(exp_res[1]))
             players_id[chat_id].successful_exp += 1
         else:
-            bot.send_message(chat_id, 'Expedition was failed')
+            bot.send_message(chat_id, 'Expedition was failed\nNum of black cards is ' + str(exp_res[1]))
             players_id[chat_id].failed_exp += 1
         if players_id[chat_id].failed_exp == 3:
             bot.send_message(chat_id, 'RIP Avalon!')
@@ -233,6 +241,12 @@ def get_exp_choice(msg):
         else:
             players_id[chat_id].state = 'game'
             players_id[chat_id].king_rotation()
+            string = ''
+            for i in range(0, len(players_id[chat_id].order)):
+                string += '\n' + str(i + 1) + '. @' \
+                          + str(bot.get_chat_member(chat_id, players_id[chat_id].order[i]).user.username)
+            bot.send_message(chat_id, 'Players order:' + string)
+            bot.send_message(chat_id, 'New King is @' + str(bot.get_chat_member(chat_id, players_id[chat_id].order[players_id[chat_id].cur_king]).user.username))
             if (players_id[chat_id].get_num_of_exp() > 1):
                 gameplay.lady_check(chat_id, players_id[chat_id])
 

@@ -19,8 +19,10 @@ def start_exp(expeditors, chat_id):
         bot.send_message(player_id, 'Your choice in expedition', reply_markup=keyboard)
 
 
-def exp_successful (red_cards, num_of_expeditors, num_of_exp):
-    return red_cards == num_of_expeditors
+def exp_successful(red_cards, num_of_expeditors, num_of_exp, num_of_players):
+    if num_of_players > 6 and num_of_exp == 3 and red_cards + 1 == num_of_expeditors:
+        return True, 1
+    return red_cards == num_of_expeditors, num_of_expeditors - red_cards
 
 
 def lady_check(chat_id, game_info):
