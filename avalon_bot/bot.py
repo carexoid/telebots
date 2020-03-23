@@ -94,13 +94,25 @@ def add_roles(msg):
 
 @bot.callback_query_handler(func=lambda call: True)
 def callback_inline(call):
+    chat_id = call.message.chat.id
     if call.message:
-        if call.data == "Lady of the Lake":
-            out = players_id[call.message.chat.id].change_lady()
-            bot.send_message(call.message.chat.id, call.data + out)
+        if call.data[0] == '@':
+            players_nick_to_id = players_id[chat_id].players_nick_to_id
+            role = players_id[chat_id].players[players_nick_to_id[call.data]]
+            bot.send_message(chat_id, call.data + " was " + role)
+            if role == 'Merlin':
+                bot.send_message(chat_id, "Mordred wins")
+            else:
+                bot.send_message(chat_id, 'Avalon wins')
+
+
+
+        elif call.data == "Lady of the Lake":
+            out = players_id[chat_id].change_lady()
+            bot.send_message(chat_id, call.data + out)
         else:
-            out = players_id[call.message.chat.id].change_roles(call.data)
-            bot.send_message(call.message.chat.id, call.data + out)
+            out = players_id[chat_id].change_roles(call.data)
+            bot.send_message(chat_id, call.data + out)
 
 
 @bot.message_handler(commands=['vote_for_expedition'])
@@ -134,7 +146,7 @@ def abort(msg):
 
 
 @bot.message_handler(func=lambda message: message.text and ("I like this expedition in chat " in message.text
-                                          or 'I don`t like it in chat ' in message.text))
+                                                            or 'I don`t like it in chat ' in message.text))
 def get_vote(msg):
     try:
         chat_id = int(msg.text.split().pop())
@@ -155,7 +167,8 @@ def get_vote(msg):
                 people_votes += '\n@' + str(bot.get_chat_member(chat_id, player).user.username) \
                                 + (' +1' if players_id[chat_id].cur_voting_for_exp[player] == 1 else ' -1')
             bot.send_message(chat_id,
-                             ('there will be such expedition' if sum > 0 else 'There won`t be such expedition') + people_votes)
+                             (
+                                 'there will be such expedition' if sum > 0 else 'There won`t be such expedition') + people_votes)
             if sum > 0:
                 players_id[chat_id].state = 'exp'
                 players_id[chat_id].people_in_exp = dict()
@@ -173,7 +186,7 @@ def get_vote(msg):
 
 
 @bot.message_handler(func=lambda message: message.text and ("Peace in chat " in message.text
-                                          or 'War in chat ' in message.text))
+                                                            or 'War in chat ' in message.text))
 def get_exp_choice(msg):
     try:
         chat_id = int(msg.text.split().pop())
@@ -196,6 +209,14 @@ def get_exp_choice(msg):
             if players_id[chat_id].failed_exp == 3:
                 bot.send_message(chat_id, 'RIP Avalon!')
             elif players_id[chat_id].successful_exp == 3:
+                keyboard = telebot.types.InlineKeyboardMarkup()
+                for id in players_id[chat_id].players:
+                    if players_id[chat_id].players[id] == "Loyal Servant of Arthur" or players_id[chat_id].players[
+                        id] == \
+                            'Merlin' or players_id[chat_id].players[id] == 'Percival':
+                        nickname = '@' + str(bot.get_chat_member(chat_id, id).user.username)
+                        btn = telebot.types.InlineKeyboardButton(text=nickname, callback_data=nickname)
+                        keyboard.add(btn)
                 bot.send_message(chat_id, 'Time to shot for Assasin')
             else:
                 players_id[chat_id].state = 'game'
