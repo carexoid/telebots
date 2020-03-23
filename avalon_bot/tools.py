@@ -25,6 +25,7 @@ class GameInfo:
             'Oberon': False
         }
         self.lady_lake = False
+        self.order = []
 
     def change_roles(self, role):
         if self.additional_roles[role]:
@@ -42,3 +43,8 @@ class GameInfo:
             self.lady_lake = True
             return " has added"
 
+    def king_rotation(self):
+        self.cur_king = (self.cur_king + 1) % len(self.order)
+
+    def get_num_of_exp(self):
+        return self.successful_exp + self.failed_exp

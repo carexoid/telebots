@@ -3,6 +3,7 @@ import teletoken
 import tools
 import gameplay
 import roles
+import random
 
 bot = telebot.TeleBot(teletoken.token)
 
@@ -58,6 +59,15 @@ def end_reg(msg):
             players_id[msg.chat.id].cur_voting_for_exp = dict.copy(players_id[msg.chat.id].players)
             bot.send_message(msg.from_user.id, " You have launched the game in" + str(msg.chat.id))
             roles.make_roles(players_id[msg.chat.id].players, players_id[msg.chat.id].additional_roles)
+            players_id[msg.chat.id].order = list(players_id[msg.chat.id].players.keys())
+            random.shuffle(players_id[msg.chat.id].order)
+            string = ''
+            for i in range(0, len(players_id[msg.chat.id].order)):
+                string += '\n' + str(i + 1) + '. @' \
+                          + str(bot.get_chat_member(msg.chat.id, players_id[msg.chat.id].order[i]).user.username)
+            bot.send_message(msg.chat.id, 'Players order:' + string)
+            players_id[msg.chat.id].cur_king = 0
+            players_id[msg.chat.id].cur_king = -1
         else:
             bot.reply_to(msg, 'You`re not creator of this game!')
         players_id[msg.chat.id].state = 'game'
@@ -154,6 +164,7 @@ def get_vote(msg):
                 gameplay.start_exp(players_id[chat_id].cur_exp, chat_id)
             else:
                 players_id[chat_id].state = 'game'
+                players_id[chat_id].king_rotation()
         else:
             bot.reply_to(msg, 'No voting for expedition right now!')
 
@@ -166,30 +177,35 @@ def get_vote(msg):
 def get_exp_choice(msg):
     try:
         chat_id = int(msg.text.split().pop())
-        if players_id[chat_id].people_in_exp[msg.from_user.id] is None:
-            players_id[chat_id].people_in_exp[msg.from_user.id] = 1 if msg.text.split()[0] == 'Peace' else 0
-        sum = 0
-        for choice in players_id[chat_id].people_in_exp.values():
-            if choice is None:
-                return
-            sum += choice
-        print(sum)
-        num_of_exp = players_id[chat_id].successful_exp + players_id[chat_id].failed_exp
-        if gameplay.exp_successful(sum, len(players_id[chat_id].people_in_exp), num_of_exp):
-            bot.send_message(chat_id, 'Expedition was successful')
-            players_id[chat_id].successful_exp += 1
-        else:
-            bot.send_message(chat_id, 'Expedition was failed')
-            players_id[chat_id].failed_exp += 1
-        if players_id[chat_id].failed_exp == 3:
-            bot.send_message(chat_id, 'RIP Avalon!')
-        elif players_id[chat_id].successful_exp == 3:
-            bot.send_message(chat_id, 'Time to shot for Assasin')
-        else:
-            players_id[chat_id].state = 'game'
+        if players_id[msg.chat.id].state == 'exp':
+            if players_id[chat_id].people_in_exp[msg.from_user.id] is None:
+                players_id[chat_id].people_in_exp[msg.from_user.id] = 1 if msg.text.split()[0] == 'Peace' else 0
+            sum = 0
+            for choice in players_id[chat_id].people_in_exp.values():
+                if choice is None:
+                    return
+                sum += choice
+            print(sum)
+            num_of_exp = players_id[chat_id].successful_exp + players_id[chat_id].failed_exp
+            if gameplay.exp_successful(sum, len(players_id[chat_id].people_in_exp), num_of_exp):
+                bot.send_message(chat_id, 'Expedition was successful')
+                players_id[chat_id].successful_exp += 1
+            else:
+                bot.send_message(chat_id, 'Expedition was failed')
+                players_id[chat_id].failed_exp += 1
+            if players_id[chat_id].failed_exp == 3:
+                bot.send_message(chat_id, 'RIP Avalon!')
+            elif players_id[chat_id].successful_exp == 3:
+                bot.send_message(chat_id, 'Time to shot for Assasin')
+            else:
+                players_id[chat_id].state = 'game'
+                players_id[chat_id].king_rotation()
+                if (players_id[chat_id].get_num_of_exp() > 1):
+                    gameplay.lady_check(chat_id, players_id[chat_id])
 
     except KeyError:
         print('bot durila x2')
+
 
 if __name__ == '__main__':
     bot.polling()
