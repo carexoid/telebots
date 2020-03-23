@@ -190,6 +190,8 @@ def get_vote(msg):
 def get_exp_choice(msg):
     try:
         chat_id = int(msg.text.split().pop())
+        if (players_id[chat_id].state != 'exp'):
+            return
         if players_id[chat_id].people_in_exp[msg.from_user.id] is None:
             players_id[chat_id].people_in_exp[msg.from_user.id] = 1 if msg.text.split()[0] == 'Peace' else 0
         sum = 0
