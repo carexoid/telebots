@@ -96,15 +96,15 @@ def add_roles(msg):
 def callback_inline(call):
     chat_id = call.message.chat.id
     if call.message:
-        if call.data[0] == '@':
+        if call.data[0] == 'a' and call.data[1] == '@':
+            nickname = call.data[1:len(call.data)]
             players_nick_to_id = players_id[chat_id].players_nick_to_id
-            role = players_id[chat_id].players[players_nick_to_id[call.data]]
-            bot.send_message(chat_id, call.data + " was " + role)
+            role = players_id[chat_id].players[players_nick_to_id[nickname]]
+            bot.send_message(chat_id, nickname + " was " + role)
             if role == 'Merlin':
                 bot.send_message(chat_id, "Mordred wins")
             else:
                 bot.send_message(chat_id, 'Avalon wins')
-
 
 
         elif call.data == "Lady of the Lake":
@@ -215,7 +215,7 @@ def get_exp_choice(msg):
                 if players_id[chat_id].players[id] == "Loyal Servant of Arthur" or players_id[chat_id].players[id] == \
                         'Merlin' or players_id[chat_id].players[id] == 'Percival':
                     nickname = '@' + str(bot.get_chat_member(chat_id, id).user.username)
-                    btn = telebot.types.InlineKeyboardButton(text=nickname, callback_data=nickname)
+                    btn = telebot.types.InlineKeyboardButton(text=nickname, callback_data='a' + nickname)
                     keyboard.add(btn)
             bot.send_message(chat_id, 'Time to shot for Assasin', reply_markup=keyboard)
 
