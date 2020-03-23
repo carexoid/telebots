@@ -190,39 +190,38 @@ def get_vote(msg):
 def get_exp_choice(msg):
     try:
         chat_id = int(msg.text.split().pop())
-        if players_id[msg.chat.id].state == 'exp':
-            if players_id[chat_id].people_in_exp[msg.from_user.id] is None:
-                players_id[chat_id].people_in_exp[msg.from_user.id] = 1 if msg.text.split()[0] == 'Peace' else 0
-            sum = 0
-            for choice in players_id[chat_id].people_in_exp.values():
-                if choice is None:
-                    return
-                sum += choice
-            print(sum)
-            num_of_exp = players_id[chat_id].successful_exp + players_id[chat_id].failed_exp
-            if gameplay.exp_successful(sum, len(players_id[chat_id].people_in_exp), num_of_exp):
-                bot.send_message(chat_id, 'Expedition was successful')
-                players_id[chat_id].successful_exp += 1
-            else:
-                bot.send_message(chat_id, 'Expedition was failed')
-                players_id[chat_id].failed_exp += 1
-            if players_id[chat_id].failed_exp == 3:
-                bot.send_message(chat_id, 'RIP Avalon!')
-            elif players_id[chat_id].successful_exp == 3:
-                keyboard = telebot.types.InlineKeyboardMarkup()
-                for id in players_id[chat_id].players:
-                    if players_id[chat_id].players[id] == "Loyal Servant of Arthur" or players_id[chat_id].players[
-                        id] == \
-                            'Merlin' or players_id[chat_id].players[id] == 'Percival':
-                        nickname = '@' + str(bot.get_chat_member(chat_id, id).user.username)
-                        btn = telebot.types.InlineKeyboardButton(text=nickname, callback_data=nickname)
-                        keyboard.add(btn)
-                bot.send_message(chat_id, 'Time to shot for Assasin')
-            else:
-                players_id[chat_id].state = 'game'
-                players_id[chat_id].king_rotation()
-                if (players_id[chat_id].get_num_of_exp() > 1):
-                    gameplay.lady_check(chat_id, players_id[chat_id])
+        if players_id[chat_id].people_in_exp[msg.from_user.id] is None:
+            players_id[chat_id].people_in_exp[msg.from_user.id] = 1 if msg.text.split()[0] == 'Peace' else 0
+        sum = 0
+        for choice in players_id[chat_id].people_in_exp.values():
+            if choice is None:
+                return
+            sum += choice
+        print(sum)
+        num_of_exp = players_id[chat_id].successful_exp + players_id[chat_id].failed_exp
+        if gameplay.exp_successful(sum, len(players_id[chat_id].people_in_exp), num_of_exp):
+            bot.send_message(chat_id, 'Expedition was successful')
+            players_id[chat_id].successful_exp += 1
+        else:
+            bot.send_message(chat_id, 'Expedition was failed')
+            players_id[chat_id].failed_exp += 1
+        if players_id[chat_id].failed_exp == 3:
+            bot.send_message(chat_id, 'RIP Avalon!')
+        elif players_id[chat_id].successful_exp == 3:
+            keyboard = telebot.types.InlineKeyboardMarkup()
+            for id in players_id[chat_id].players:
+                if players_id[chat_id].players[id] == "Loyal Servant of Arthur" or players_id[chat_id].players[id] == \
+                        'Merlin' or players_id[chat_id].players[id] == 'Percival':
+                    nickname = '@' + str(bot.get_chat_member(chat_id, id).user.username)
+                    btn = telebot.types.InlineKeyboardButton(text=nickname, callback_data=nickname)
+                    keyboard.add(btn)
+            bot.send_message(chat_id, 'Time to shot for Assasin', reply_markup=keyboard)
+
+        else:
+            players_id[chat_id].state = 'game'
+            players_id[chat_id].king_rotation()
+            if (players_id[chat_id].get_num_of_exp() > 1):
+                gameplay.lady_check(chat_id, players_id[chat_id])
 
     except KeyError:
         print('bot durila x2')
