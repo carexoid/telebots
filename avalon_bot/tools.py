@@ -8,7 +8,7 @@ class GameInfo:
 
     peaceful = {'Loyal Servant of Arthur', 'Merlin', 'Percival'}
 
-    def __init__(self, state, creator, players, cur_king=None, cur_lady=None):
+    def __init__(self, state, creator, players, msg, cur_king=None, cur_lady=None):
         self.state = state
         self.creator = creator
         self.players = players
@@ -29,6 +29,7 @@ class GameInfo:
         self.lady_lake = False
         self.order = []
         self.checked = []
+        self.reg_btn = msg
 
     def change_roles(self, role):
         if self.additional_roles[role]:

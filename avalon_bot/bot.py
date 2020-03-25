@@ -14,17 +14,36 @@ players_id = dict()
 def start(msg):
     bot.reply_to(msg, 'yooooy')
 
+@bot.message_handler(commands=['leave'])
+def start(msg):
+    for chat in players_id:
+        if msg.from_user.id in players_id[chat].players:
+            del players_id[chat].players[msg.from_user.id]
+
+        keyboard = telebot.types.InlineKeyboardMarkup()
+        add_button = telebot.types.InlineKeyboardButton(text="Register", callback_data="register")
+        keyboard.add(add_button)
+        reg_msg = players_id[chat].reg_btn
+        reg = 'Registration is on\nPlayers in game:'
+        for user in players_id[chat].players:
+            reg = reg + ' @' + str(bot.get_chat_member(chat, user).user.username)
+
+        print(reg)
+        bot.edit_message_text(chat_id=chat, message_id=reg_msg.message_id, text=reg,
+                              reply_markup=keyboard)
+        bot.send_message(msg.from_user.id, "You have left the game")
+
 
 @bot.message_handler(commands=['start_registration'])
 def start_reg(msg):
     try:
         players_id[msg.chat.id]
     except KeyError:
-        players_id[msg.chat.id] = tools.GameInfo('reg', msg.from_user.id, dict())
+        players_id[msg.chat.id] = tools.GameInfo('reg', msg.from_user.id, dict(), msg)
         keyboard = telebot.types.InlineKeyboardMarkup()
         add_button = telebot.types.InlineKeyboardButton(text="Register", callback_data="register")
         keyboard.add(add_button)
-        bot.reply_to(msg, 'Registration is on', reply_markup=keyboard)
+        bot.reply_to(msg, 'Registration is on\nPlayers in game:', reply_markup=keyboard)
         bot.send_message(msg.from_user.id, 'You`re creator of game in chat ' + str(msg.chat.id) + '\n Only you can '
                                                                                                   'launch the game')
         return
@@ -109,15 +128,27 @@ def callback_inline(call):
                 bot.reply_to(call.message, 'No registration started!\nRun /start_registration')
                 return
             if players_id[call.message.chat.id].state == 'reg':
-                if int(call.message.from_user.id) not in players_id[int(call.message.chat.id)].players:
+                if int(call.from_user.id) not in players_id[int(call.message.chat.id)].players:
                     players_id[int(call.message.chat.id)].players[int(call.from_user.id)] = None
                     players_id[int(call.message.chat.id)].players_nick_to_id['@' + call.from_user.username] = \
                         int(call.from_user.id)
+                    keyboard = telebot.types.InlineKeyboardMarkup()
+                    add_button = telebot.types.InlineKeyboardButton(text="Register", callback_data="register")
+                    keyboard.add(add_button)
+                    text = call.message.text + ' @' + call.from_user.username
+                    bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=text,
+                                          reply_markup=keyboard)
+                    players_id[call.message.chat.id].reg_btn = call.message
+                    bot.send_message(call.from_user.id,
+                                     'You`re registered for the Avalon game in ' + call.message.chat.title)
+
                 bot.send_message(call.from_user.id, 'You`re registered for the Avalon game in ' +
                                  call.message.chat.title)
                 #bot.send_message(chat_id, len(players_id[int(chat_id)]))
             else:
                 bot.reply_to(call.message, 'Game is on!')
+
+
         elif call.data == "Lady of the Lake":
             out = players_id[chat_id].change_lady()
             bot.send_message(chat_id, call.data + out)
@@ -273,7 +304,11 @@ def get_exp_choice(msg):
                     nickname = '@' + str(bot.get_chat_member(chat_id, id).user.username)
                     btn = telebot.types.InlineKeyboardButton(text=nickname, callback_data='a' + nickname)
                     keyboard.add(btn)
-            bot.send_message(chat_id, 'Time to shot for Assassin', reply_markup=keyboard)
+            bot.send_message(chat_id, 'Time to shot for Assassin')
+            for i in players_id[chat_id].players:
+                if players_id[chat_id].players[i] == "Assassin":
+                    bot.send_message(i, "Who do you want to kill?", reply_markup=keyboard)
+
         else:
             players_id[chat_id].state = 'game'
             players_id[chat_id].king_rotation()
