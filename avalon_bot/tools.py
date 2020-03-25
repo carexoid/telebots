@@ -6,6 +6,8 @@ class GameInfo:
                        9: [3, 4, 4, 5, 5],
                        10: [3, 4, 4, 5, 5]}
 
+    peaceful = {'Loyal Servant of Arthur', 'Merlin', 'Percival'}
+
     def __init__(self, state, creator, players, msg, cur_king=None, cur_lady=None):
         self.state = state
         self.creator = creator
@@ -14,7 +16,7 @@ class GameInfo:
         self.cur_lady = cur_lady
         self.successful_exp = 0
         self.failed_exp = 0
-        self.exp_size = [0, 0, 0, 0, 0]
+        self.exp_size = [2, 2, 2, 2, 2]
         self.players_nick_to_id = dict()
         self.cur_voting_for_exp = dict.copy(players)
         self.cur_exp = []
