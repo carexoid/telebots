@@ -21,27 +21,14 @@ def start_reg(msg):
         players_id[msg.chat.id]
     except KeyError:
         players_id[msg.chat.id] = tools.GameInfo('reg', msg.from_user.id, dict())
-        bot.reply_to(msg, 'Registration is on')
+        keyboard = telebot.types.InlineKeyboardMarkup()
+        add_button = telebot.types.InlineKeyboardButton(text="Register", callback_data="register")
+        keyboard.add(add_button)
+        bot.reply_to(msg, 'Registration is on', reply_markup=keyboard)
         bot.send_message(msg.from_user.id, 'You`re creator of game in chat ' + str(msg.chat.id) + '\n Only you can '
                                                                                                   'launch the game')
         return
     bot.reply_to(msg, ('Game' if players_id[msg.chat.id].state == 'game' else 'Registration') + ' is on!')
-
-
-@bot.message_handler(commands=['reg_me'])
-def reg_user(msg):
-    try:
-        players_id[msg.chat.id]
-    except KeyError:
-        bot.reply_to(msg, 'No registration started!\nRun /start_registration')
-        return
-    if players_id[msg.chat.id].state == 'reg':
-        if msg.from_user.id not in players_id[msg.chat.id].players:
-            players_id[msg.chat.id].players[msg.from_user.id] = None
-            players_id[msg.chat.id].players_nick_to_id['@' + msg.from_user.username] = msg.from_user.id
-        bot.reply_to(msg, 'You`re registered!')
-    else:
-        bot.reply_to(msg, 'Game is on!')
 
 
 @bot.message_handler(commands=['end_registration'])
@@ -55,6 +42,7 @@ def end_reg(msg):
         bot.reply_to(msg, 'Game is on!')
     else:
         if msg.from_user.id == players_id[msg.chat.id].creator:
+            print(players_id[msg.chat.id].players)
             # players_id[msg.chat.id].players = role.make_roles(players_id[msg.chat.id].players)
             players_id[msg.chat.id].cur_voting_for_exp = dict.copy(players_id[msg.chat.id].players)
             bot.send_message(msg.from_user.id, " You have launched the game in" + str(msg.chat.id))
@@ -75,6 +63,9 @@ def end_reg(msg):
                 lady_id = players_id[msg.chat.id].order[players_id[msg.chat.id].cur_lady]
                 bot.send_message(msg.chat.id,
                                  "Lady of the Lake is @" + str(bot.get_chat_member(msg.chat.id, lady_id).user.username))
+            print(players_id[msg.chat.id].players)
+            print(players_id[msg.chat.id].order)
+            print(players_id[msg.chat.id].players_nick_to_id)
         else:
             bot.reply_to(msg, 'You`re not creator of this game!')
         players_id[msg.chat.id].state = 'game'
@@ -113,6 +104,23 @@ def callback_inline(call):
             else:
                 bot.send_message(chat_id, 'Avalon wins')
 
+        elif call.data == "register":
+            try:
+                players_id[int(call.message.chat.id)]
+            except KeyError:
+                bot.reply_to(call.message, 'No registration started!\nRun /start_registration')
+                return
+            if players_id[call.message.chat.id].state == 'reg':
+                if int(call.message.from_user.id) not in players_id[int(call.message.chat.id)].players:
+                    players_id[int(call.message.chat.id)].players[int(call.from_user.id)] = None
+                    players_id[int(call.message.chat.id)].players_nick_to_id['@' + call.from_user.username] = \
+                        int(call.from_user.id)
+                bot.send_message(call.from_user.id, 'You`re registered for the Avalon game in ' + call.message.chat.title)
+                #bot.send_message(chat_id, len(players_id[int(chat_id)]))
+            else:
+                bot.reply_to(call.message, 'Game is on!')
+
+
         elif call.data == "Lady of the Lake":
             out = players_id[chat_id].change_lady()
             bot.send_message(chat_id, call.data + out)
@@ -127,12 +135,23 @@ def callback_inline(call):
             user = int(data[0])
             lady_id = players_id[chat].order[players_id[chat].cur_lady]
             bot.send_message(chat, "Lady of the Lake has checked @" + nickname)
+            #bot.send_message(chat, '@' + nickname + ' is new Lady of the Lake')
+            #index = 0
+            #i = 0
+            #print("order", players_id[chat].order)
+            #for i in players_id[chat].order:
+            #    print(i, user)
+            #    if i == user:
+            #        print("lady index = ", index)
+            #        index = i
+            #    i = i + 1
+            #players_id[chat].cur_lady = index
             check = ''
             if players_id[chat].players[user] == 'Merlin' or players_id[chat].players[user] == 'Persival' or \
                     players_id[chat].players[user] == 'Loyal Servant of Arthur':
                 check = " is servant of Arthur"
             else:
-                check = " is servant od Mordred"
+                check = " is servant of Mordred"
             bot.send_message(lady_id, nickname + check)
 
 
@@ -192,7 +211,7 @@ def get_vote(msg):
                 sum += int(vote)
             for player in players_id[chat_id].cur_voting_for_exp.keys():
                 people_votes += '\n@' + str(bot.get_chat_member(chat_id, player).user.username) \
-                                + (' +1' if players_id[chat_id].cur_voting_for_exp[player] == 1 else ' -1')
+                                + ('👍' if players_id[chat_id].cur_voting_for_exp[player] == 1 else ' -1')
             bot.send_message(chat_id,
                              (
                                  'there will be such expedition' if sum > 0 else 'There won`t be such expedition') + people_votes)

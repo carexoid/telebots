@@ -66,7 +66,7 @@ def make_roles(roles, additional):
                    'in the end.  As Mordred, it is imperative that you recognize your unique situation because you '
                    'will be able to watch the votes to see how everyone votes for teams to which the other minions '
                    'belong.',
-        'Assassin': 'Assasin is a minon of Mordred who wants to find Merlin. Merlin votes correctly pretty much '
+        'Assassin': 'Assasin is a minion of Mordred who wants to find Merlin. Merlin votes correctly pretty much '
                     'always so the assassin’s most important task is watching the '
                     'voting to see who is able to do that.  When you know the players in the game, you can often tell '
                     'who knows too much, but when you do not, you often have to look to the voting results to deduce '
