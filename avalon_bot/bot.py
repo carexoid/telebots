@@ -12,7 +12,7 @@ players_id = dict()
 
 @bot.message_handler(commands=['start'])
 def start(msg):
-    bot.reply_to(msg, 'yooooy' + str(msg.from_user.id))
+    bot.reply_to(msg, 'yooooy')
 
 
 @bot.message_handler(commands=['start_registration'])
@@ -63,6 +63,9 @@ def end_reg(msg):
                 lady_id = players_id[msg.chat.id].order[players_id[msg.chat.id].cur_lady]
                 bot.send_message(msg.chat.id,
                                  "Lady of the Lake is @" + str(bot.get_chat_member(msg.chat.id, lady_id).user.username))
+            print(players_id[msg.chat.id].players)
+            print(players_id[msg.chat.id].order)
+            print(players_id[msg.chat.id].players_nick_to_id)
         else:
             bot.reply_to(msg, 'You`re not creator of this game!')
         players_id[msg.chat.id].state = 'game'
@@ -108,10 +111,10 @@ def callback_inline(call):
                 bot.reply_to(call.message, 'No registration started!\nRun /start_registration')
                 return
             if players_id[call.message.chat.id].state == 'reg':
-                if call.message.from_user.id not in players_id[int(call.message.chat.id)].players:
+                if int(call.message.from_user.id) not in players_id[int(call.message.chat.id)].players:
                     players_id[int(call.message.chat.id)].players[int(call.from_user.id)] = None
                     players_id[int(call.message.chat.id)].players_nick_to_id['@' + call.from_user.username] = \
-                        call.message.from_user.id
+                        int(call.from_user.id)
                 bot.send_message(call.from_user.id, 'You`re registered for the Avalon game in ' + call.message.chat.title)
                 #bot.send_message(chat_id, len(players_id[int(chat_id)]))
             else:
@@ -135,9 +138,11 @@ def callback_inline(call):
             #bot.send_message(chat, '@' + nickname + ' is new Lady of the Lake')
             #index = 0
             #i = 0
+            #print("order", players_id[chat].order)
             #for i in players_id[chat].order:
             #    print(i, user)
             #    if i == user:
+            #        print("lady index = ", index)
             #        index = i
             #    i = i + 1
             #players_id[chat].cur_lady = index
@@ -206,7 +211,7 @@ def get_vote(msg):
                 sum += int(vote)
             for player in players_id[chat_id].cur_voting_for_exp.keys():
                 people_votes += '\n@' + str(bot.get_chat_member(chat_id, player).user.username) \
-                                + (' 👍👍👍👍👍👍' if players_id[chat_id].cur_voting_for_exp[player] == 1 else ' -1')
+                                + ('👍' if players_id[chat_id].cur_voting_for_exp[player] == 1 else ' -1')
             bot.send_message(chat_id,
                              (
                                  'there will be such expedition' if sum > 0 else 'There won`t be such expedition') + people_votes)
