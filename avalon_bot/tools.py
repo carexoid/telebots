@@ -6,6 +6,8 @@ class GameInfo:
                        9: [3, 4, 4, 5, 5],
                        10: [3, 4, 4, 5, 5]}
 
+    peaceful = {'Loyal Servant of Arthur', 'Merlin', 'Percival'}
+
     def __init__(self, state, creator, players, cur_king=None, cur_lady=None):
         self.state = state
         self.creator = creator
