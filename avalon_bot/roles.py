@@ -32,7 +32,7 @@ def shuffle_roles(size, additional):
             roles.append(key)
 
     while len(roles) < size:
-        roles.append('Minion of Mordred')
+        roles.append('Assassin')
 
     random.shuffle(roles)
     return roles

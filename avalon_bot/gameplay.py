@@ -7,14 +7,14 @@ bot = telebot.TeleBot(teletoken.token)
 
 def vote_for_exp(expeditors, chat_id):
     keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True)
-    keyboard.row('👍I like this expedition in chat ' + str(chat_id), '👎🏿I don`t like it in chat ' + str(chat_id))
+    keyboard.row('👍I like this expedition', '👎🏿I don`t like it')
     for player_id in expeditors:
         bot.send_message(player_id, 'Do you like this expedition?', reply_markup=keyboard)
 
 
 def start_exp(expeditors, chat_id):
     keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True)
-    keyboard.row('❤️ Peace in chat ' + str(chat_id), '🖤 War in chat ' + str(chat_id))
+    keyboard.row('❤️ Approve', '🖤 Reject')
     for player_id in expeditors:
         bot.send_message(player_id, 'Your choice in expedition', reply_markup=keyboard)
 
@@ -48,3 +48,4 @@ def endgame(chat_id, game_info, dead_id):
         string += '\n' + bot.get_chat_member(chat_id, item[0]).user.username + ' was ' + \
                   ('❤️' if item[1] in tools.GameInfo.peaceful else '🖤') + item[1]
     bot.send_message(chat_id, 'Roles in this game:' + string)
+

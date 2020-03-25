@@ -9,13 +9,20 @@ bot = telebot.TeleBot(teletoken.token)
 
 players_id = dict()
 
+chat_of_player = dict()
+
 
 @bot.message_handler(commands=['start'])
 def start(msg):
     bot.reply_to(msg, 'yooooy')
 
 @bot.message_handler(commands=['leave'])
-def start(msg):
+def leave(msg):
+    if players_id(msg.from_user.id).state != 'reg':
+        bot.reply_to(msg, 'You can leave only during registration')
+        return
+    if msg.from_user.id in chat_of_player.keys():
+        chat_of_player.pop(msg.from_user.id)
     for chat in players_id:
         if msg.from_user.id in players_id[chat].players:
             del players_id[chat].players[msg.from_user.id]
@@ -114,13 +121,17 @@ def callback_inline(call):
     if call.message:
         if call.data[0] == 'a' and call.data[1] == '@':
             nickname = call.data[1:len(call.data)]
-            players_nick_to_id = players_id[chat_id].players_nick_to_id
-            role = players_id[chat_id].players[players_nick_to_id[nickname]]
-            bot.send_message(chat_id, nickname + " was " + role)
+            # players_nick_to_id = players_id[chat_id].players_nick_to_id
+            role = players_id[chat_id].players[players_id[chat_id].players_nick_to_id[nickname]]
+            # bot.send_message(chat_id, nickname + " was " + role)
+            gameplay.endgame(chat_id, players_id[chat_id], pplayers_id[chat_id].players_nick_to_id[nickname])
             if role == 'Merlin':
                 bot.send_message(chat_id, "Mordred wins")
             else:
                 bot.send_message(chat_id, 'Avalon wins')
+            for key in players_id[chat_id].players.keys():
+                chat_of_player.pop(key)
+            players_id.pop(chat_id)
         elif call.data == "register":
             try:
                 players_id[int(call.message.chat.id)]
@@ -128,7 +139,11 @@ def callback_inline(call):
                 bot.reply_to(call.message, 'No registration started!\nRun /start_registration')
                 return
             if players_id[call.message.chat.id].state == 'reg':
-                if int(call.from_user.id) not in players_id[int(call.message.chat.id)].players:
+                if int(call.message.from_user.id) not in players_id[int(call.message.chat.id)].players:
+                    if int(call.from_user.id) in chat_of_player.keys():
+                        bot.send_message(int(call.from_user.id), 'You are in not ended game!')
+                        return
+                    chat_of_player[int(call.from_user.id)] = int(call.message.chat.id)
                     players_id[int(call.message.chat.id)].players[int(call.from_user.id)] = None
                     players_id[int(call.message.chat.id)].players_nick_to_id['@' + call.from_user.username] = \
                         int(call.from_user.id)
@@ -147,8 +162,6 @@ def callback_inline(call):
                 #bot.send_message(chat_id, len(players_id[int(chat_id)]))
             else:
                 bot.reply_to(call.message, 'Game is on!')
-
-
         elif call.data == "Lady of the Lake":
             out = players_id[chat_id].change_lady()
             bot.send_message(chat_id, call.data + out)
@@ -218,11 +231,11 @@ def abort(msg):
         bot.reply_to(msg, 'No game to be aborted')
 
 
-@bot.message_handler(func=lambda message: message.text and ("I like this expedition in chat " in message.text
-                                                            or 'I don`t like it in chat ' in message.text))
+@bot.message_handler(func=lambda message: message.text and ("I like this expedition" in message.text
+                                                            or 'I don`t like it' in message.text))
 def get_vote(msg):
     try:
-        chat_id = int(msg.text.split().pop())
+        chat_id = chat_of_player[msg.from_user.id]
         if players_id[chat_id].state == 'vote':
             print(msg.text)
             print(chat_id)
@@ -266,19 +279,19 @@ def get_vote(msg):
         print('bot durila')
 
 
-@bot.message_handler(func=lambda message: message.text and ("Peace in chat " in message.text
-                                                            or 'War in chat ' in message.text))
+@bot.message_handler(func=lambda message: message.text and ("Approve" in message.text
+                                                            or 'Reject' in message.text))
 def get_exp_choice(msg):
     try:
-        chat_id = int(msg.text.split().pop())
+        chat_id = chat_of_player[msg.from_user.id]
         if players_id[chat_id].state != 'exp':
             return
         if players_id[chat_id].people_in_exp[msg.from_user.id] is None:
             if players_id[chat_id].players[msg.from_user.id] in tools.GameInfo.peaceful and \
-                    msg.text.split()[1] == 'War':
+                    msg.text.split()[1] == 'Reject':
                 bot.reply_to(msg, 'You can`t do it due to your role')
                 return
-            players_id[chat_id].people_in_exp[msg.from_user.id] = 1 if msg.text.split()[1] == 'Peace' else 0
+            players_id[chat_id].people_in_exp[msg.from_user.id] = 1 if msg.text.split()[1] == 'Approve' else 0
         sum = 0
         for choice in players_id[chat_id].people_in_exp.values():
             if choice is None:
@@ -300,7 +313,7 @@ def get_exp_choice(msg):
         elif players_id[chat_id].successful_exp == 3:
             keyboard = telebot.types.InlineKeyboardMarkup()
             for id in players_id[chat_id].players:
-                if players_id[chat_id].players[id] in tools.GameInfo.peaceful:
+                if players_id[chat_id].players[id] in tools.GameInfo.peaceful or True:
                     nickname = '@' + str(bot.get_chat_member(chat_id, id).user.username)
                     btn = telebot.types.InlineKeyboardButton(text=nickname, callback_data='a' + nickname)
                     keyboard.add(btn)
