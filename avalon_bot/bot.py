@@ -38,38 +38,37 @@ def end_reg(msg):
     except KeyError:
         bot.reply_to(msg, 'No registration started!\nRun /start_registration')
         return
-    if players_id[msg.chat.id].state == 'game':
-        bot.reply_to(msg, 'Game is on!')
-    else:
-        if msg.from_user.id == players_id[msg.chat.id].creator:
-            print(players_id[msg.chat.id].players)
-            # players_id[msg.chat.id].players = role.make_roles(players_id[msg.chat.id].players)
-            players_id[msg.chat.id].cur_voting_for_exp = dict.copy(players_id[msg.chat.id].players)
-            bot.send_message(msg.from_user.id, " You have launched the game in" + str(msg.chat.id))
-            roles.make_roles(players_id[msg.chat.id].players, players_id[msg.chat.id].additional_roles)
-            players_id[msg.chat.id].order = list(players_id[msg.chat.id].players.keys())
-            random.shuffle(players_id[msg.chat.id].order)
-            string = ''
-            for i in range(0, len(players_id[msg.chat.id].order)):
-                string += '\n' + str(i + 1) + '. @' \
-                          + str(bot.get_chat_member(msg.chat.id, players_id[msg.chat.id].order[i]).user.username)
-            bot.send_message(msg.chat.id, 'Players order:' + string)
-            players_id[msg.chat.id].cur_king = 0
-            players_id[msg.chat.id].cur_lady = -1
-            players_id[msg.chat.id].checked.append(players_id[msg.chat.id].order[-1])
-            king_id = players_id[msg.chat.id].order[players_id[msg.chat.id].cur_king]
-            bot.send_message(msg.chat.id, "King is @" + str(bot.get_chat_member(msg.chat.id, king_id).user.username))
-            if players_id[msg.chat.id].lady_lake:
-                lady_id = players_id[msg.chat.id].order[players_id[msg.chat.id].cur_lady]
-                bot.send_message(msg.chat.id,
-                                 "Lady of the Lake is @" + str(bot.get_chat_member(msg.chat.id, lady_id).user.username))
-            print(players_id[msg.chat.id].players)
-            print(players_id[msg.chat.id].order)
-            print(players_id[msg.chat.id].players_nick_to_id)
+    try:
+        if players_id[msg.chat.id].state == 'game':
+            bot.reply_to(msg, 'Game is on!')
         else:
-            bot.reply_to(msg, 'You`re not creator of this game!')
-        players_id[msg.chat.id].state = 'game'
-    print(players_id[msg.chat.id].players)
+            if msg.from_user.id == players_id[msg.chat.id].creator:
+                # players_id[msg.chat.id].players = role.make_roles(players_id[msg.chat.id].players)
+                players_id[msg.chat.id].cur_voting_for_exp = dict.copy(players_id[msg.chat.id].players)
+                bot.send_message(msg.from_user.id, " You have launched the game in" + str(msg.chat.id))
+                roles.make_roles(players_id[msg.chat.id].players, players_id[msg.chat.id].additional_roles)
+                players_id[msg.chat.id].order = list(players_id[msg.chat.id].players.keys())
+                random.shuffle(players_id[msg.chat.id].order)
+                # players_id[msg.chat.id].exp_size = list.copy(tools.GameInfo.expedition_size[len(players_id[msg.chat.id].players)])
+                string = ''
+                for i in range(0, len(players_id[msg.chat.id].order)):
+                    string += '\n' + str(i + 1) + '. @' \
+                              + str(bot.get_chat_member(msg.chat.id, players_id[msg.chat.id].order[i]).user.username)
+                bot.send_message(msg.chat.id, 'Players order:' + string)
+                players_id[msg.chat.id].cur_king = 0
+                players_id[msg.chat.id].cur_lady = -1
+                players_id[msg.chat.id].checked.append(players_id[msg.chat.id].order[-1])
+                king_id = players_id[msg.chat.id].order[players_id[msg.chat.id].cur_king]
+                bot.send_message(msg.chat.id, "King is @" + str(bot.get_chat_member(msg.chat.id, king_id).user.username))
+                if players_id[msg.chat.id].lady_lake:
+                    lady_id = players_id[msg.chat.id].order[players_id[msg.chat.id].cur_lady]
+                    bot.send_message(msg.chat.id, "Lady of the Lake is @" + str(bot.get_chat_member(msg.chat.id, lady_id).user.username))
+            else:
+                bot.reply_to(msg, 'You`re not creator of this game!')
+            players_id[msg.chat.id].state = 'game'
+        print(players_id[msg.chat.id].players)
+    except KeyError:
+        bot.reply_to(msg, 'too few players to start')
 
 
 @bot.message_handler(commands=['add_roles'])
@@ -161,8 +160,8 @@ def voter(msg):
         if msg.from_user.id != players_id[msg.chat.id].order[players_id[msg.chat.id].cur_king]:
             bot.reply_to(msg, 'You aren`t the king, durik!!!')
             return
-        if len(msg.text.split()) < 1:
-            bot.reply_to(msg, 'To few expeditors')
+        if len(msg.text.split()) - 1 != players_id[msg.chat.id].exp_size[players_id[msg.chat.id].get_num_of_exp()]:
+            bot.reply_to(msg, 'Wrong number of expeditors')
         else:
             exp_id = []
             nicks = msg.text.split()
@@ -282,6 +281,7 @@ def get_exp_choice(msg):
                           + str(bot.get_chat_member(chat_id, players_id[chat_id].order[i]).user.username)
             bot.send_message(chat_id, 'Players order:' + string)
             bot.send_message(chat_id, 'New King is @' + str(bot.get_chat_member(chat_id, players_id[chat_id].order[players_id[chat_id].cur_king]).user.username))
+            bot.send_message(chat_id, 'Next expedition is for ' + str(players_id[chat_id].exp_size[players_id[chat_id].get_num_of_exp()]) + ' people')
             if (players_id[chat_id].get_num_of_exp() > 1):
                 gameplay.lady_check(chat_id, players_id[chat_id])
 
