@@ -24,7 +24,7 @@ def start_reg(msg):
         keyboard = telebot.types.InlineKeyboardMarkup()
         add_button = telebot.types.InlineKeyboardButton(text="Register", callback_data="register")
         keyboard.add(add_button)
-        bot.reply_to(msg, 'Registration is on', reply_markup=keyboard)
+        bot.reply_to(msg, 'Registration is on\nPlayers in game:', reply_markup=keyboard)
         bot.send_message(msg.from_user.id, 'You`re creator of game in chat ' + str(msg.chat.id) + '\n Only you can '
                                                                                                   'launch the game')
         return
@@ -111,11 +111,19 @@ def callback_inline(call):
                 bot.reply_to(call.message, 'No registration started!\nRun /start_registration')
                 return
             if players_id[call.message.chat.id].state == 'reg':
-                if int(call.message.from_user.id) not in players_id[int(call.message.chat.id)].players:
+                if int(call.from_user.id) not in players_id[int(call.message.chat.id)].players:
                     players_id[int(call.message.chat.id)].players[int(call.from_user.id)] = None
                     players_id[int(call.message.chat.id)].players_nick_to_id['@' + call.from_user.username] = \
                         int(call.from_user.id)
-                bot.send_message(call.from_user.id, 'You`re registered for the Avalon game in ' + call.message.chat.title)
+                    keyboard = telebot.types.InlineKeyboardMarkup()
+                    add_button = telebot.types.InlineKeyboardButton(text="Register", callback_data="register")
+                    keyboard.add(add_button)
+                    text = call.message.text + ' @' + call.from_user.username
+                    bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=text,
+                                          reply_markup=keyboard)
+                    bot.send_message(call.from_user.id,
+                                     'You`re registered for the Avalon game in ' + call.message.chat.title)
+
                 #bot.send_message(chat_id, len(players_id[int(chat_id)]))
             else:
                 bot.reply_to(call.message, 'Game is on!')
@@ -211,7 +219,7 @@ def get_vote(msg):
                 sum += int(vote)
             for player in players_id[chat_id].cur_voting_for_exp.keys():
                 people_votes += '\n@' + str(bot.get_chat_member(chat_id, player).user.username) \
-                                + ('👍' if players_id[chat_id].cur_voting_for_exp[player] == 1 else ' -1')
+                                + (' 👍' if players_id[chat_id].cur_voting_for_exp[player] == 1 else ' -1')
             bot.send_message(chat_id,
                              (
                                  'there will be such expedition' if sum > 0 else 'There won`t be such expedition') + people_votes)
@@ -271,7 +279,10 @@ def get_exp_choice(msg):
                     nickname = '@' + str(bot.get_chat_member(chat_id, id).user.username)
                     btn = telebot.types.InlineKeyboardButton(text=nickname, callback_data='a' + nickname)
                     keyboard.add(btn)
-            bot.send_message(chat_id, 'Time to shot for Assasin', reply_markup=keyboard)
+            bot.send_message(chat_id, 'Time to shot for Assassin')
+            for i in players_id[chat_id].players:
+                if players_id[chat_id].players[i] == "Assassin":
+                    bot.send_message(i, "Who do you want to kill?", reply_markup=keyboard)
 
         else:
             players_id[chat_id].state = 'game'
