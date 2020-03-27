@@ -16,6 +16,7 @@ chat_of_player = dict()
 def start(msg):
     bot.reply_to(msg, 'yooooy')
 
+
 @bot.message_handler(commands=['leave'])
 def leave(msg):
     if players_id(msg.from_user.id).state != 'reg':
@@ -223,6 +224,8 @@ def voter(msg):
 def abort(msg):
     try:
         if msg.from_user.id == players_id[msg.chat.id].creator:
+            for player in players_id[msg.chat.id].players.keys():
+                chat_of_player.pop(player)
             players_id.pop(msg.chat.id)
             bot.reply_to(msg, 'Game aborted')
         else:

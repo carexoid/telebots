@@ -2,6 +2,7 @@ import random
 import telebot
 import teletoken
 import bot
+import tools
 
 botbot = telebot.TeleBot(teletoken.token)
 
@@ -33,6 +34,7 @@ def shuffle_roles(size, additional):
 
     while len(roles) < size:
         roles.append('Assassin')
+        roles.append('Merlin')
 
     random.shuffle(roles)
     return roles
@@ -66,7 +68,7 @@ def make_roles(roles, additional):
                    'in the end.  As Mordred, it is imperative that you recognize your unique situation because you '
                    'will be able to watch the votes to see how everyone votes for teams to which the other minions '
                    'belong.',
-        'Assassin': 'Assasin is a minion of Mordred who wants to find Merlin. Merlin votes correctly pretty much '
+        'Assassin': 'Assassin is a minion of Mordred who wants to find Merlin. Merlin votes correctly pretty much '
                     'always so the assassin’s most important task is watching the '
                     'voting to see who is able to do that.  When you know the players in the game, you can often tell '
                     'who knows too much, but when you do not, you often have to look to the voting results to deduce '
@@ -79,4 +81,26 @@ def make_roles(roles, additional):
         send_text = "Your role is " + roles[key]
         botbot.send_message(key, send_text)
         botbot.send_message(key, roles_description[roles[key]])
+        teamlist = ''
+        mordred = ''
+        oberon = ''
+        if (roles[key] not in tools.GameInfo.peaceful and roles[key] != 'Oberon') or roles[key] == 'Merlin':
+            for teammate_key in roles.keys():
+                if roles[teammate_key] == 'Mordred':
+                    mordred = '\n@' + botbot.get_chat_member(teammate_key, teammate_key).user.username +\
+                              ' is minion of Mordred'
+                if roles[teammate_key] == 'Oberon':
+                    oberon = '\n@' + botbot.get_chat_member(teammate_key, teammate_key).user.username +\
+                              ' is minion of Mordred'
+                if roles[teammate_key] not in tools.GameInfo.peaceful and roles[teammate_key] != 'Oberon':
+                    teamlist += '\n@' + botbot.get_chat_member(teammate_key, teammate_key).user.username +\
+                                ' is minion of Mordred'
+            botbot.send_message(key, ('Minions of Mordred are:' + oberon if roles[key] == 'Merlin'
+                                      else 'Your teammates are:' + mordred) + teamlist)
+        if roles[key] == 'Percival':
+            for teammate_key in roles.keys():
+                if roles[teammate_key] == 'Merlin' or roles[teammate_key] == 'Morgana':
+                    teamlist += '\n@' + botbot.get_chat_member(key, key).user.username
+            botbot.send_message(key, 'Merlin is one of them:' + teamlist)
+
     return roles
