@@ -29,6 +29,7 @@ def exp_successful(red_cards, num_of_expeditors, num_of_exp, num_of_players):
 def lady_check(chat_id, game_info):
     if not game_info.lady_lake:
         return
+    bot.send_message(chat_id, "It is time for Lady of the Lake to check.")
     keyboard = telebot.types.InlineKeyboardMarkup()
     for player in game_info.order:
         if player not in game_info.past_lady:

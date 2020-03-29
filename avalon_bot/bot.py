@@ -5,27 +5,6 @@ import gameplay
 import roles
 import random
 
-item = tools.GameInfo('reg', 123, dict(), [])
-item.players = {1: 'r1', 2: 'r2', 3: 'r3'}
-item.cur_lady = -1
-item.order = [1, 2, 3]
-print("item.cur_lady", item.cur_lady)
-item.pass_lady(3)
-print("item.cur_lady", item.cur_lady)
-print('item.order[item.cur_lady]', item.order[item.cur_lady])
-
-
-
-
-
-
-
-
-
-
-
-
-
 bot = telebot.TeleBot(teletoken.token)
 
 players_id = dict()
@@ -348,6 +327,10 @@ def get_exp_choice(msg):
             for i in range(0, len(players_id[chat_id].order)):
                 string += '\n' + str(i + 1) + '. @' \
                           + str(bot.get_chat_member(chat_id, players_id[chat_id].order[i]).user.username)
+                if i == players_id[chat_id].cur_king:
+                    string += '👑'
+                if i == players_id[chat_id].cur_lady or i == players_id[chat_id].cur_lady + len(players_id[chat_id].order):
+                    string += ''
             bot.send_message(chat_id, 'Players order:' + string)
             bot.send_message(chat_id, 'New King is @' +
                              str(bot.get_chat_member(chat_id,
