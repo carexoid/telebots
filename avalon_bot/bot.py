@@ -19,7 +19,7 @@ def start(msg):
 
 @bot.message_handler(commands=['leave'])
 def leave(msg):
-    if players_id(msg.from_user.id).state != 'reg':
+    if players_id[msg.from_user.id].state != 'reg':
         bot.reply_to(msg, 'You can leave only during registration')
         return
     if msg.from_user.id in chat_of_player.keys():
@@ -86,10 +86,13 @@ def end_reg(msg):
                 players_id[msg.chat.id].cur_lady = -1
                 players_id[msg.chat.id].checked.append(players_id[msg.chat.id].order[-1])
                 king_id = players_id[msg.chat.id].order[players_id[msg.chat.id].cur_king]
-                bot.send_message(msg.chat.id, "King is @" + str(bot.get_chat_member(msg.chat.id, king_id).user.username))
+                bot.send_message(msg.chat.id,
+                                 "King is @" + str(bot.get_chat_member(msg.chat.id, king_id).user.username))
                 if players_id[msg.chat.id].lady_lake:
                     lady_id = players_id[msg.chat.id].order[players_id[msg.chat.id].cur_lady]
-                    bot.send_message(msg.chat.id, "Lady of the Lake is @" + str(bot.get_chat_member(msg.chat.id, lady_id).user.username))
+                    bot.send_message(msg.chat.id, "Lady of the Lake is @" + str(
+                        bot.get_chat_member(msg.chat.id, lady_id).user.username))
+                    players_id[msg.chat.id].past_lady.append(lady_id)
             else:
                 bot.reply_to(msg, 'You`re not creator of this game!')
             players_id[msg.chat.id].state = 'game'
@@ -125,7 +128,7 @@ def callback_inline(call):
             # players_nick_to_id = players_id[chat_id].players_nick_to_id
             role = players_id[chat_id].players[players_id[chat_id].players_nick_to_id[nickname]]
             # bot.send_message(chat_id, nickname + " was " + role)
-            gameplay.endgame(chat_id, players_id[chat_id], pplayers_id[chat_id].players_nick_to_id[nickname])
+            gameplay.endgame(chat_id, players_id[chat_id], players_id[chat_id].players_nick_to_id[nickname])
             if role == 'Merlin':
                 bot.send_message(chat_id, "Mordred wins")
             else:
@@ -160,7 +163,7 @@ def callback_inline(call):
 
                 bot.send_message(call.from_user.id, 'You`re registered for the Avalon game in ' +
                                  call.message.chat.title)
-                #bot.send_message(chat_id, len(players_id[int(chat_id)]))
+                # bot.send_message(chat_id, len(players_id[int(chat_id)]))
             else:
                 bot.reply_to(call.message, 'Game is on!')
         elif call.data == "Lady of the Lake":
@@ -171,29 +174,20 @@ def callback_inline(call):
             bot.send_message(chat_id, call.data + out)
         else:
             data = call.data.split()
-            nickname = str(bot.get_chat_member(data[1], data[0]).user.username)
             chat = int(data[1])
             user = int(data[0])
+            nickname = str(bot.get_chat_member(chat, user).user.username)
             lady_id = players_id[chat].order[players_id[chat].cur_lady]
             bot.send_message(chat, "Lady of the Lake has checked @" + nickname)
-            #bot.send_message(chat, '@' + nickname + ' is new Lady of the Lake')
-            #index = 0
-            #i = 0
-            #print("order", players_id[chat].order)
-            #for i in players_id[chat].order:
-            #    print(i, user)
-            #    if i == user:
-            #        print("lady index = ", index)
-            #        index = i
-            #    i = i + 1
-            #players_id[chat].cur_lady = index
+            players_id[chat].pass_lady(user)
+            players_id[chat].past_lady.append(user)
             check = ''
-            if players_id[chat].players[user] == 'Merlin' or players_id[chat].players[user] == 'Persival' or \
-                    players_id[chat].players[user] == 'Loyal Servant of Arthur':
+            if players_id[chat].players[user] in players_id[chat].peaceful:
                 check = " is servant of Arthur"
             else:
                 check = " is servant of Mordred"
-            bot.send_message(lady_id, nickname + check)
+            bot.send_message(lady_id, '@' + nickname + check)
+            bot.send_message(chat, '@' + nickname + " is new Lady of the Lake")
 
 
 @bot.message_handler(commands=['vote_for_expedition'])
@@ -220,7 +214,7 @@ def voter(msg):
         bot.reply_to(msg, 'No registration started\nRun /start_registration')
 
 
-@bot.message_handler(commands=['abort'])
+@bot.message_handler(commands=['abort'])  # ЦЕ ГРЕХ, ДАНЯ, ПОДУМАЙ!!
 def abort(msg):
     try:
         if msg.from_user.id == players_id[msg.chat.id].creator:
@@ -274,7 +268,8 @@ def get_vote(msg):
                 bot.send_message(chat_id, 'Players order:' + string)
                 bot.send_message(chat_id, 'New King is @' +
                                  str(bot.get_chat_member(chat_id,
-                                                         players_id[chat_id].order[players_id[chat_id].cur_king]).user.username))
+                                                         players_id[chat_id].order[
+                                                             players_id[chat_id].cur_king]).user.username))
         else:
             bot.reply_to(msg, 'No voting for expedition right now!')
 
@@ -332,10 +327,15 @@ def get_exp_choice(msg):
             for i in range(0, len(players_id[chat_id].order)):
                 string += '\n' + str(i + 1) + '. @' \
                           + str(bot.get_chat_member(chat_id, players_id[chat_id].order[i]).user.username)
+                if i == players_id[chat_id].cur_king:
+                    string += '👑'
+                if i == players_id[chat_id].cur_lady or i == players_id[chat_id].cur_lady + len(players_id[chat_id].order):
+                    string += ''
             bot.send_message(chat_id, 'Players order:' + string)
             bot.send_message(chat_id, 'New King is @' +
                              str(bot.get_chat_member(chat_id,
-                                                     players_id[chat_id].order[players_id[chat_id].cur_king]).user.username))
+                                                     players_id[chat_id].order[
+                                                         players_id[chat_id].cur_king]).user.username))
             bot.send_message(chat_id, 'Next expedition is for ' +
                              str(players_id[chat_id].exp_size[players_id[chat_id].get_num_of_exp()]) + ' people')
             if players_id[chat_id].get_num_of_exp() > 1:
