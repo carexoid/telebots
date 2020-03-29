@@ -19,7 +19,7 @@ def start(msg):
 
 @bot.message_handler(commands=['leave'])
 def leave(msg):
-    if players_id(msg.from_user.id).state != 'reg':
+    if players_id[msg.from_user.id].state != 'reg':
         bot.reply_to(msg, 'You can leave only during registration')
         return
     if msg.from_user.id in chat_of_player.keys():
@@ -125,7 +125,7 @@ def callback_inline(call):
             # players_nick_to_id = players_id[chat_id].players_nick_to_id
             role = players_id[chat_id].players[players_id[chat_id].players_nick_to_id[nickname]]
             # bot.send_message(chat_id, nickname + " was " + role)
-            gameplay.endgame(chat_id, players_id[chat_id], pplayers_id[chat_id].players_nick_to_id[nickname])
+            gameplay.endgame(chat_id, players_id[chat_id], players_id[chat_id].players_nick_to_id[nickname])
             if role == 'Merlin':
                 bot.send_message(chat_id, "Mordred wins")
             else:
