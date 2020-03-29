@@ -1,5 +1,6 @@
 import telebot
 import teletoken
+import tools
 from tools import GameInfo
 
 bot = telebot.TeleBot(teletoken.token)
@@ -30,7 +31,7 @@ def lady_check(chat_id, game_info):
         return
     keyboard = telebot.types.InlineKeyboardMarkup()
     for player in game_info.order:
-        if player not in game_info.checked:
+        if player not in game_info.past_lady:
             cur_button = telebot.types.InlineKeyboardButton(
                 text='\n@' + str(bot.get_chat_member(chat_id, player).user.username),
                 callback_data=str(player) + ' ' + str(chat_id))

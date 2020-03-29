@@ -30,6 +30,7 @@ class GameInfo:
         self.order = []
         self.checked = []
         self.reg_btn = msg
+        self.past_lady = []
 
     def change_roles(self, role):
         if self.additional_roles[role]:
@@ -52,3 +53,10 @@ class GameInfo:
 
     def get_num_of_exp(self):
         return self.successful_exp + self.failed_exp
+
+    def pass_lady(self, to):
+        index = 0
+        for i in self.players:
+            if i == to:
+                self.cur_lady = index
+            index = index + 1
