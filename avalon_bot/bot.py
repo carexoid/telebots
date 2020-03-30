@@ -130,18 +130,19 @@ def callback_inline(call):
     chat_id = int(call.message.chat.id)
     if call.message:
         if call.data[0] == 'a' and call.data[1] == '@':
-            nickname = call.data[1:len(call.data)]
+            nickname = call.data.split()[0][1:len(call.data)]
+            in_chat = int(call.data.split()[1])
             # players_nick_to_id = players_id[chat_id].players_nick_to_id
-            role = players_id[chat_id].players[players_id[chat_id].players_nick_to_id[nickname]]
+            role = players_id[in_chat].players[players_id[in_chat].players_nick_to_id[nickname]]
             # bot.send_message(chat_id, nickname + " was " + role)
-            gameplay.endgame(chat_id, players_id[chat_id], players_id[chat_id].players_nick_to_id[nickname])
+            gameplay.endgame(in_chat, players_id[in_chat], players_id[in_chat].players_nick_to_id[nickname])
             if role == 'Merlin':
-                bot.send_message(chat_id, "Mordred wins")
+                bot.send_message(in_chat, "Mordred wins")
             else:
-                bot.send_message(chat_id, 'Avalon wins')
-            for key in players_id[chat_id].players.keys():
+                bot.send_message(in_chat, 'Avalon wins')
+            for key in players_id[in_chat].players.keys():
                 chat_of_player.pop(key)
-            players_id.pop(chat_id)
+            players_id.pop(in_chat)
         elif call.data == "register":
             try:
                 players_id[int(call.message.chat.id)]
@@ -345,19 +346,23 @@ def get_exp_choice(msg):
                                           num_of_exp, len(players_id[chat_id].order))
         print(exp_res)
         if exp_res[0]:
-            bot.send_message(chat_id, 'Expedition was successful\nNum of black cards is ' + str(exp_res[1]))
+            bot.send_message(chat_id, 'Expedition was successful\nNum of black cards is ' + str(exp_res[1]) + '\n\n' +
+                             str(players_id[chat_id].successful_exp + 1) + ' successful expeditions\n' +
+                             str(players_id[chat_id].failed_exp) + ' failed expeditions')
             players_id[chat_id].successful_exp += 1
         else:
-            bot.send_message(chat_id, 'Expedition was failed\nNum of black cards is ' + str(exp_res[1]))
+            bot.send_message(chat_id, 'Expedition was failed\nNum of black cards is ' + str(exp_res[1])+ '\n\n' +
+                             str(players_id[chat_id].successful_exp) + ' successful expeditions\n' +
+                             str(players_id[chat_id].failed_exp + 1) + ' failed expeditions')
             players_id[chat_id].failed_exp += 1
         if players_id[chat_id].failed_exp == 3:
             bot.send_message(chat_id, 'RIP Avalon!')
         elif players_id[chat_id].successful_exp == 3:
             keyboard = telebot.types.InlineKeyboardMarkup()
             for id in players_id[chat_id].players:
-                if players_id[chat_id].players[id] in tools.GameInfo.peaceful or True:
+                if players_id[chat_id].players[id] in tools.GameInfo.peaceful:
                     nickname = '@' + str(bot.get_chat_member(chat_id, id).user.username)
-                    btn = telebot.types.InlineKeyboardButton(text=nickname, callback_data='a' + nickname)
+                    btn = telebot.types.InlineKeyboardButton(text=nickname, callback_data='a' + nickname + ' ' + str(chat_id))
                     keyboard.add(btn)
             bot.send_message(chat_id, 'Time to shot for Assassin')
             for i in players_id[chat_id].players:
