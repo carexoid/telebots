@@ -14,7 +14,8 @@ chat_of_player = dict()
 
 @bot.message_handler(commands=['start'])
 def start(msg):
-    bot.reply_to(msg, 'yooooy')
+    bot.send_sticker(msg.chat.id, "CAACAgIAAxkBAAMvXmY70ZzdsmncwzrQmiAelSD3Z5EAAm8BAALzVj8XnZO2J6flZasYBA",
+                     reply_to_message_id=msg.message_id)
 
 
 @bot.message_handler(commands=['leave'])
