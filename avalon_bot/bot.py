@@ -52,7 +52,8 @@ def start_reg(msg):
         keyboard = telebot.types.InlineKeyboardMarkup()
         add_button = telebot.types.InlineKeyboardButton(text="Register", callback_data="register")
         keyboard.add(add_button)
-        bot.reply_to(msg, 'Registration is on\nPlayers in game:', reply_markup=keyboard)
+        del_m = bot.reply_to(msg, 'Registration is on\nPlayers in game:', reply_markup=keyboard)
+        players_id[msg.chat.id].del_msg.append(del_m.message_id)
         bot.send_message(msg.from_user.id, 'You`re creator of game in chat ' + str(msg.chat.id) + '\n Only you can '
                                                                                                   'launch the game')
         return
@@ -71,6 +72,9 @@ def end_reg(msg):
             bot.reply_to(msg, 'Game is on!')
         else:
             if msg.from_user.id == players_id[msg.chat.id].creator:
+                for id in players_id[msg.chat.id].del_msg:
+                    bot.delete_message(chat_id=msg.chat.id, message_id=id)
+                players_id[msg.chat.id].del_msg = []
                 # players_id[msg.chat.id].players = role.make_roles(players_id[msg.chat.id].players)
                 players_id[msg.chat.id].cur_voting_for_exp = dict.copy(players_id[msg.chat.id].players)
                 bot.send_message(msg.from_user.id, " You have launched the game in" + str(msg.chat.id))
@@ -250,6 +254,9 @@ def voter(msg):
 def abort(msg):
     try:
         if msg.from_user.id == players_id[msg.chat.id].creator:
+            for id in players_id[msg.chat.id].del_msg:
+                bot.delete_message(chat_id=msg.chat.id, message_id=id)
+            players_id[msg.chat.id].del_msg = []
             for player in players_id[msg.chat.id].players.keys():
                 chat_of_player.pop(player)
             players_id.pop(msg.chat.id)
