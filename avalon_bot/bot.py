@@ -202,6 +202,11 @@ def callback_inline(call):
                 bot.edit_message_reply_markup(chat_id=chat_id, message_id=players_id[chat_id].vote_msg_id,
                                               reply_markup=keyboard)
         elif call.data == 'send_expedition':
+            if call.from_user.id != players_id[chat_id].order[players_id[chat_id].cur_king]:
+                return
+            if len(players_id[chat_id].cur_exp) != players_id[chat_id].exp_size[players_id[chat_id].get_num_of_exp()]:
+                bot.send_message(chat_id, 'Wrong number of expeditors')
+                return
             string = ''
             for i in players_id[chat_id].cur_exp:
                 string += '\n@' + str(bot.get_chat_member(chat_id, i).user.username)
@@ -229,30 +234,6 @@ def callback_inline(call):
                 check = " is servant of Mordred"
             bot.send_message(lady_id, '@' + nickname + check)
             bot.send_message(chat, '@' + nickname + " is new Lady of the Lake")
-
-
-@bot.message_handler(commands=['vote_for_expedition'])
-def voter(msg):
-    try:
-        if msg.from_user.id != players_id[msg.chat.id].order[players_id[msg.chat.id].cur_king]:
-            bot.reply_to(msg, 'You aren`t the king, durik!!!')
-            return
-        if len(msg.text.split()) - 1 != players_id[msg.chat.id].exp_size[players_id[msg.chat.id].get_num_of_exp()]:
-            bot.reply_to(msg, 'Wrong number of expeditors')
-        else:
-            exp_id = []
-            nicks = msg.text.split()
-            nicks.pop(0)
-            for nick in nicks:
-                print(nick)
-                exp_id.append(players_id[msg.chat.id].players_nick_to_id[nick])
-            for player in players_id[msg.chat.id].players.keys():
-                players_id[msg.chat.id].cur_voting_for_exp[player] = None
-            gameplay.vote_for_exp(players_id[msg.chat.id].order, msg.chat.id)
-            players_id[msg.chat.id].cur_exp = exp_id
-            players_id[msg.chat.id].state = 'vote'
-    except KeyError:
-        bot.reply_to(msg, 'No registration started\nRun /start_registration')
 
 
 @bot.message_handler(commands=['abort'])  # ЦЕ ГРЕХ, ДАНЯ, ПОДУМАЙ!!
