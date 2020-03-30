@@ -4,7 +4,7 @@
     <list default="true" id="b5a4f684-143c-44da-81aa-a560e7ee4595" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/roles.py" beforeDir="false" afterPath="$PROJECT_DIR$/roles.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameplay.py" beforeDir="false" afterPath="$PROJECT_DIR$/gameplay.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,7 +104,11 @@
       <workItem from="1585164086828" duration="9256000" />
       <workItem from="1585230084576" duration="72000" />
       <workItem from="1585231514084" duration="8674000" />
-      <workItem from="1585334821128" duration="313000" />
+      <workItem from="1585334821128" duration="1014000" />
+      <workItem from="1585420568793" duration="599000" />
+      <workItem from="1585516761763" duration="4000" />
+      <workItem from="1585580213226" duration="1136000" />
+      <workItem from="1585581625373" duration="498000" />
     </task>
     <task id="LOCAL-00001" summary="vote for expedition">
       <created>1584816072441</created>
@@ -204,7 +208,14 @@
       <option name="project" value="LOCAL" />
       <updated>1585175932980</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Roles sharing implemented">
+      <created>1585335164209</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1585335164210</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -220,17 +231,18 @@
     <MESSAGE value="Size of expedition added" />
     <MESSAGE value="endgame added" />
     <MESSAGE value="New buttons" />
-    <option name="LAST_COMMIT_MESSAGE" value="New buttons" />
+    <MESSAGE value="Roles sharing implemented" />
+    <option name="LAST_COMMIT_MESSAGE" value="Roles sharing implemented" />
   </component>
   <component name="WindowStateProjectService">
     <state x="418" y="214" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1584735388408">
       <screen x="0" y="32" width="1920" height="1048" />
     </state>
     <state x="418" y="214" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.32.1920.1048@0.32.1920.1048" timestamp="1584735388408" />
-    <state x="481" y="130" width="1049" height="858" key="CommitChangelistDialog2" timestamp="1585175932848">
+    <state x="481" y="130" width="1049" height="858" key="CommitChangelistDialog2" timestamp="1585335163942">
       <screen x="0" y="32" width="1920" height="1048" />
     </state>
-    <state x="481" y="130" width="1049" height="858" key="CommitChangelistDialog2/0.32.1920.1048@0.32.1920.1048" timestamp="1585175932848" />
+    <state x="481" y="130" width="1049" height="858" key="CommitChangelistDialog2/0.32.1920.1048@0.32.1920.1048" timestamp="1585335163942" />
     <state x="531" y="125" width="914" height="856" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1584739353009" />
     <state x="100" y="132" width="1720" height="848" key="DiffContextDialog" timestamp="1584967187085">
       <screen x="0" y="32" width="1920" height="1048" />
@@ -240,22 +252,22 @@
       <screen x="0" y="32" width="1920" height="1048" />
     </state>
     <state x="743" y="314" width="423" height="502" key="FileChooserDialogImpl/0.32.1920.1048@0.32.1920.1048" timestamp="1584735386697" />
-    <state width="1876" height="274" key="GridCell.Tab.0.bottom" timestamp="1585238494475">
+    <state width="938" height="274" key="GridCell.Tab.0.bottom" timestamp="1585581466980">
       <screen x="0" y="32" width="1920" height="1048" />
     </state>
-    <state width="1876" height="274" key="GridCell.Tab.0.bottom/0.32.1920.1048@0.32.1920.1048" timestamp="1585238494475" />
-    <state width="1876" height="274" key="GridCell.Tab.0.center" timestamp="1585238494475">
+    <state width="938" height="274" key="GridCell.Tab.0.bottom/0.32.1920.1048@0.32.1920.1048" timestamp="1585581466980" />
+    <state width="938" height="274" key="GridCell.Tab.0.center" timestamp="1585581466980">
       <screen x="0" y="32" width="1920" height="1048" />
     </state>
-    <state width="1876" height="274" key="GridCell.Tab.0.center/0.32.1920.1048@0.32.1920.1048" timestamp="1585238494475" />
-    <state width="1876" height="274" key="GridCell.Tab.0.left" timestamp="1585238494474">
+    <state width="938" height="274" key="GridCell.Tab.0.center/0.32.1920.1048@0.32.1920.1048" timestamp="1585581466980" />
+    <state width="938" height="274" key="GridCell.Tab.0.left" timestamp="1585581466979">
       <screen x="0" y="32" width="1920" height="1048" />
     </state>
-    <state width="1876" height="274" key="GridCell.Tab.0.left/0.32.1920.1048@0.32.1920.1048" timestamp="1585238494474" />
-    <state width="1876" height="274" key="GridCell.Tab.0.right" timestamp="1585238494475">
+    <state width="938" height="274" key="GridCell.Tab.0.left/0.32.1920.1048@0.32.1920.1048" timestamp="1585581466979" />
+    <state width="938" height="274" key="GridCell.Tab.0.right" timestamp="1585581466980">
       <screen x="0" y="32" width="1920" height="1048" />
     </state>
-    <state width="1876" height="274" key="GridCell.Tab.0.right/0.32.1920.1048@0.32.1920.1048" timestamp="1585238494475" />
+    <state width="938" height="274" key="GridCell.Tab.0.right/0.32.1920.1048@0.32.1920.1048" timestamp="1585581466980" />
     <state x="189" y="125" width="1536" height="874" key="MergeDialog" timestamp="1585174163463">
       <screen x="0" y="32" width="1920" height="1048" />
     </state>
@@ -272,10 +284,10 @@
       <screen x="0" y="32" width="1920" height="1048" />
     </state>
     <state x="483" y="161" width="944" height="795" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.32.1920.1048@0.32.1920.1048" timestamp="1585157130820" />
-    <state x="699" y="476" width="521" height="166" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1585173988779">
+    <state x="699" y="476" width="521" height="166" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1585512389274">
       <screen x="0" y="32" width="1920" height="1048" />
     </state>
-    <state x="699" y="476" width="521" height="166" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.32.1920.1048@0.32.1920.1048" timestamp="1585173988779" />
+    <state x="699" y="476" width="521" height="166" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.32.1920.1048@0.32.1920.1048" timestamp="1585512389274" />
     <state x="623" y="263" width="672" height="678" key="search.everywhere.popup" timestamp="1585156643763">
       <screen x="0" y="32" width="1920" height="1048" />
     </state>
@@ -292,7 +304,7 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/avalon_bot$bot.coverage" NAME="bot Coverage Results" MODIFIED="1585238494466" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/avalon_bot$bot.coverage" NAME="bot Coverage Results" MODIFIED="1585581466962" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/avalon_bot$Unnamed.coverage" NAME="Unnamed Coverage Results" MODIFIED="1584735309674" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
   </component>
 </project>

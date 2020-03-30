@@ -47,7 +47,7 @@ def endgame(chat_id, game_info, dead_id):
         bot.send_message(chat_id, 'Merlin is alive!\n' + game_info.players[dead_id] + ' was killed')
     string = ''
     for item in game_info.players.items():
-        string += '\n' + bot.get_chat_member(chat_id, item[0]).user.username + ' was ' + \
+        string += '\n@' + bot.get_chat_member(chat_id, item[0]).user.username + ' was ' + \
                   ('❤️' if item[1] in tools.GameInfo.peaceful else '🖤') + item[1]
     bot.send_message(chat_id, 'Roles in this game:' + string)
 
