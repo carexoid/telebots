@@ -31,6 +31,8 @@ class GameInfo:
         self.checked = []
         self.reg_btn = msg
         self.past_lady = []
+        self.vote_msg_id = -1
+        self.del_msg = []
 
     def change_roles(self, role):
         if self.additional_roles[role]:
