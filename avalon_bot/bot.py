@@ -4,6 +4,7 @@ import tools
 import gameplay
 import roles
 import random
+import vote
 
 bot = telebot.TeleBot(teletoken.token)
 
@@ -93,6 +94,7 @@ def end_reg(msg):
                     bot.send_message(msg.chat.id, "Lady of the Lake is @" + str(
                         bot.get_chat_member(msg.chat.id, lady_id).user.username))
                     players_id[msg.chat.id].past_lady.append(lady_id)
+                vote.send_voting(msg.chat.id, players_id[msg.chat.id])
             else:
                 bot.reply_to(msg, 'You`re not creator of this game!')
             players_id[msg.chat.id].state = 'game'
@@ -172,6 +174,22 @@ def callback_inline(call):
         elif call.data == "Morgana" or call.data == "Oberon" or call.data == "Mordred":
             out = players_id[chat_id].change_roles(call.data)
             bot.send_message(chat_id, call.data + out)
+        elif call.data[0] == 'v':
+            arr = call.data.split()
+            data = arr[1]
+            if int(data) in players_id[chat_id].cur_exp:
+                for i in range(0, len(players_id[chat_id].cur_exp)):
+                    if int(data) == players_id[chat_id].cur_exp[i]:
+                        players_id[chat_id].cur_exp.pop(i)
+                        break
+                keyboard = vote.vote_keyboard(chat_id, players_id[chat_id])
+                bot.edit_message_reply_markup(chat_id=chat_id, message_id=players_id[chat_id].vote_msg_id,
+                                              reply_markup=keyboard)
+            else:
+                players_id[chat_id].cur_exp.append(int(data))
+                keyboard = vote.vote_keyboard(chat_id, players_id[chat_id])
+                bot.edit_message_reply_markup(chat_id=chat_id, message_id=players_id[chat_id].vote_msg_id,
+                                              reply_markup=keyboard)
         else:
             data = call.data.split()
             chat = int(data[1])
@@ -270,6 +288,7 @@ def get_vote(msg):
                                  str(bot.get_chat_member(chat_id,
                                                          players_id[chat_id].order[
                                                              players_id[chat_id].cur_king]).user.username))
+                vote.send_voting(chat_id, players_id[chat_id])
         else:
             bot.reply_to(msg, 'No voting for expedition right now!')
 
@@ -327,10 +346,6 @@ def get_exp_choice(msg):
             for i in range(0, len(players_id[chat_id].order)):
                 string += '\n' + str(i + 1) + '. @' \
                           + str(bot.get_chat_member(chat_id, players_id[chat_id].order[i]).user.username)
-                if i == players_id[chat_id].cur_king:
-                    string += '👑'
-                if i == players_id[chat_id].cur_lady or i == players_id[chat_id].cur_lady + len(players_id[chat_id].order):
-                    string += ''
             bot.send_message(chat_id, 'Players order:' + string)
             bot.send_message(chat_id, 'New King is @' +
                              str(bot.get_chat_member(chat_id,
