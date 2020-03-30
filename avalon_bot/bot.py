@@ -175,6 +175,8 @@ def callback_inline(call):
             out = players_id[chat_id].change_roles(call.data)
             bot.send_message(chat_id, call.data + out)
         elif call.data[0] == 'v':
+            if call.from_user.id != players_id[chat_id].order[players_id[chat_id].cur_king]:
+                return
             arr = call.data.split()
             data = arr[1]
             if int(data) in players_id[chat_id].cur_exp:
@@ -190,6 +192,15 @@ def callback_inline(call):
                 keyboard = vote.vote_keyboard(chat_id, players_id[chat_id])
                 bot.edit_message_reply_markup(chat_id=chat_id, message_id=players_id[chat_id].vote_msg_id,
                                               reply_markup=keyboard)
+        elif call.data == 'send_expedition':
+            string = ''
+            for i in players_id[chat_id].cur_exp:
+                string += '\n@' + str(bot.get_chat_member(chat_id, i).user.username)
+            bot.send_message(chat_id, "The expedition is:" + string)
+            for i in players_id[chat_id].order:
+                bot.send_message(i, "The expedition is:" + string)
+            players_id[chat_id].state = 'vote'
+            gameplay.vote_for_exp(players_id[chat_id].order, chat_id)
         else:
             data = call.data.split()
             chat = int(data[1])
