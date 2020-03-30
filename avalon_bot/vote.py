@@ -24,5 +24,7 @@ def send_voting(chat_id, game_info):
     keybord = telebot.types.InlineKeyboardMarkup()
     btn = telebot.types.InlineKeyboardButton( text="Send", callback_data="send_expedition")
     keybord.add(btn)
-    bot.send_message(chat_id, "Send expedition", reply_markup=keybord)
+    del_m = bot.send_message(chat_id, "Send expedition", reply_markup=keybord)
     bot.pin_chat_message(chat_id, msg.message_id)
+    game_info.del_msg.append(msg.message_id)
+    game_info.del_msg.append(del_m.message_id)

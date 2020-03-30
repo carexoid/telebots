@@ -201,6 +201,9 @@ def callback_inline(call):
                 bot.send_message(i, "The expedition is:" + string)
             players_id[chat_id].state = 'vote'
             gameplay.vote_for_exp(players_id[chat_id].order, chat_id)
+            for id in players_id[chat_id].del_msg:
+                bot.delete_message(chat_id=chat_id, message_id=id)
+            players_id[chat_id].del_msg = []
         else:
             data = call.data.split()
             chat = int(data[1])
@@ -271,10 +274,10 @@ def get_vote(msg):
                 bot.send_message(msg.chat.id, "You voted for this expedition", reply_markup=None)
             sum = 0
             people_votes = ''
-            for vote in players_id[chat_id].cur_voting_for_exp.values():
-                if not vote:
+            for vote_i in players_id[chat_id].cur_voting_for_exp.values():
+                if not vote_i:
                     return
-                sum += int(vote)
+                sum += int(vote_i)
             for player in players_id[chat_id].cur_voting_for_exp.keys():
                 people_votes += '\n@' + str(bot.get_chat_member(chat_id, player).user.username) \
                                 + ('👍' if players_id[chat_id].cur_voting_for_exp[player] == 1 else '👎🏿')
@@ -299,6 +302,10 @@ def get_vote(msg):
                                  str(bot.get_chat_member(chat_id,
                                                          players_id[chat_id].order[
                                                              players_id[chat_id].cur_king]).user.username))
+
+                players_id[chat_id].cur_exp = []
+                for player in players_id[chat_id].players.keys():
+                    players_id[chat_id].cur_voting_for_exp[player] = None
                 vote.send_voting(chat_id, players_id[chat_id])
         else:
             bot.reply_to(msg, 'No voting for expedition right now!')
@@ -366,6 +373,11 @@ def get_exp_choice(msg):
                              str(players_id[chat_id].exp_size[players_id[chat_id].get_num_of_exp()]) + ' people')
             if players_id[chat_id].get_num_of_exp() > 1:
                 gameplay.lady_check(chat_id, players_id[chat_id])
+
+            players_id[chat_id].cur_exp = []
+            for player in players_id[chat_id].players.keys():
+                players_id[chat_id].cur_voting_for_exp[player] = None
+            vote.send_voting(chat_id, players_id[chat_id])
 
     except KeyError:
         print('bot durila x2')
