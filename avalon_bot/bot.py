@@ -83,12 +83,16 @@ def end_reg(msg):
                 random.shuffle(players_id[msg.chat.id].order)
                 # players_id[msg.chat.id].exp_size = list.copy(tools.GameInfo.expedition_size[len(players_id[msg.chat.id].players)])
                 string = ''
+                players_id[msg.chat.id].cur_king = 0
+                players_id[msg.chat.id].cur_lady = -1
                 for i in range(0, len(players_id[msg.chat.id].order)):
                     string += '\n' + str(i + 1) + '. @' \
                               + str(bot.get_chat_member(msg.chat.id, players_id[msg.chat.id].order[i]).user.username)
+                    if i == players_id[msg.chat.id].cur_king % len(players_id[msg.chat.id].order):
+                        string += '👑'
+                    if players_id[msg.chat.id].lady_lake and i == players_id[msg.chat.id].cur_lady % len(players_id[msg.chat.id].order):
+                        string += '👸'
                 bot.send_message(msg.chat.id, 'Players order:' + string)
-                players_id[msg.chat.id].cur_king = 0
-                players_id[msg.chat.id].cur_lady = -1
                 players_id[msg.chat.id].checked.append(players_id[msg.chat.id].order[-1])
                 king_id = players_id[msg.chat.id].order[players_id[msg.chat.id].cur_king]
                 bot.send_message(msg.chat.id,
@@ -305,6 +309,10 @@ def get_vote(msg):
                 for i in range(0, len(players_id[chat_id].order)):
                     string += '\n' + str(i + 1) + '. @' \
                               + str(bot.get_chat_member(chat_id, players_id[chat_id].order[i]).user.username)
+                    if i == players_id[chat_id].cur_king % len(players_id[chat_id].order):
+                        string += '👑'
+                    if players_id[chat_id].lady_lake and  players_id[chat_id].lady_lake and i == players_id[chat_id].cur_lady % len(players_id[chat_id].order):
+                        string += '👸'
                 bot.send_message(chat_id, 'Players order:' + string)
                 bot.send_message(chat_id, 'New King is @' +
                                  str(bot.get_chat_member(chat_id,
@@ -376,6 +384,10 @@ def get_exp_choice(msg):
             for i in range(0, len(players_id[chat_id].order)):
                 string += '\n' + str(i + 1) + '. @' \
                           + str(bot.get_chat_member(chat_id, players_id[chat_id].order[i]).user.username)
+                if i == players_id[chat_id].cur_king % len(players_id[chat_id].order):
+                    string += '👑'
+                if players_id[chat_id].lady_lake and i == players_id[chat_id].cur_lady % len(players_id[chat_id].order):
+                    string += '👸'
             bot.send_message(chat_id, 'Players order:' + string)
             bot.send_message(chat_id, 'New King is @' +
                              str(bot.get_chat_member(chat_id,
