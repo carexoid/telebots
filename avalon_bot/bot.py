@@ -173,8 +173,8 @@ def callback_inline(call):
                     bot.send_message(call.from_user.id,
                                      'You`re registered for the Avalon game in ' + call.message.chat.title)
 
-                bot.send_message(call.from_user.id, 'You`re registered for the Avalon game in ' +
-                                 call.message.chat.title)
+                # bot.send_message(call.from_user.id, 'You`re registered for the Avalon game in ' +
+                #                  call.message.chat.title)
                 # bot.send_message(chat_id, len(players_id[int(chat_id)]))
             else:
                 bot.reply_to(call.message, 'Game is on!')
