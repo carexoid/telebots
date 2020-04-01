@@ -82,7 +82,7 @@ def end_reg(msg):
                 roles.make_roles(players_id[msg.chat.id].players, players_id[msg.chat.id].additional_roles)
                 players_id[msg.chat.id].order = list(players_id[msg.chat.id].players.keys())
                 random.shuffle(players_id[msg.chat.id].order)
-                # players_id[msg.chat.id].exp_size = list.copy(tools.GameInfo.expedition_size[len(players_id[msg.chat.id].players)])
+                players_id[msg.chat.id].exp_size = list.copy(tools.GameInfo.expedition_size[len(players_id[msg.chat.id].players)])
                 string = ''
                 players_id[msg.chat.id].cur_king = 0
                 players_id[msg.chat.id].cur_lady = -1
