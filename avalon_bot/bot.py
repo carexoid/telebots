@@ -21,7 +21,10 @@ def start(msg):
 
 @bot.message_handler(commands=['leave'])
 def leave(msg):
-    if players_id[msg.from_user.id].state != 'reg':
+    if msg.from_user.id not in chat_of_player:
+        bot.send_message(msg.from_user.id, "You don`t take part in any game")
+        return
+    if players_id[chat_of_player[msg.from_user.id]].state != 'reg':
         bot.reply_to(msg, 'You can leave only during registration')
         return
     if msg.from_user.id in chat_of_player.keys():
@@ -82,7 +85,7 @@ def end_reg(msg):
                 roles.make_roles(players_id[msg.chat.id].players, players_id[msg.chat.id].additional_roles)
                 players_id[msg.chat.id].order = list(players_id[msg.chat.id].players.keys())
                 random.shuffle(players_id[msg.chat.id].order)
-                players_id[msg.chat.id].exp_size = list.copy(tools.GameInfo.expedition_size[len(players_id[msg.chat.id].players)])
+                #players_id[msg.chat.id].exp_size = list.copy(tools.GameInfo.expedition_size[len(players_id[msg.chat.id].players)])
                 string = ''
                 players_id[msg.chat.id].cur_king = 0
                 players_id[msg.chat.id].cur_lady = -1
