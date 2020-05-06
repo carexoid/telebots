@@ -21,7 +21,10 @@ def start(msg):
 
 @bot.message_handler(commands=['leave'])
 def leave(msg):
-gti    if players_id[msg.from_user.id].state != 'reg':
+    if msg.from_user.id not in chat_of_player:
+        bot.send_message(msg.from_user.id, "You don`t take part in any game")
+        return
+    if players_id[chat_of_player[msg.from_user.id]].state != 'reg':
         bot.reply_to(msg, 'You can leave only during registration')
         return
     if msg.from_user.id in chat_of_player.keys():
@@ -122,6 +125,9 @@ def add_roles(msg):
         if players_id[msg.chat.id].state == 'game':
             bot.reply_to(msg, "The game has already started")
         else:
+            if msg.from_user.id != players_id[msg.chat.id].creator:
+                bot.send_message(msg.chat.id, "You`re not creator of this game!")
+                return
             keyboard = telebot.types.InlineKeyboardMarkup()
             morgana_button = telebot.types.InlineKeyboardButton(text="Morgana", callback_data="Morgana")
             mordred_button = telebot.types.InlineKeyboardButton(text="Mordred", callback_data="Mordred")
@@ -183,9 +189,13 @@ def callback_inline(call):
             else:
                 bot.reply_to(call.message, 'Game is on!')
         elif call.data == "Lady of the Lake":
+            if call.from_user.id != players_id[chat_id].creator:
+                return
             out = players_id[chat_id].change_lady()
             bot.send_message(chat_id, call.data + out)
         elif call.data == "Morgana" or call.data == "Oberon" or call.data == "Mordred":
+            if call.from_user.id != players_id[chat_id].creator:
+                return
             out = players_id[chat_id].change_roles(call.data)
             bot.send_message(chat_id, call.data + out)
         elif call.data[0] == 'v':
