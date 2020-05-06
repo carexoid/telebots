@@ -125,7 +125,8 @@ def add_roles(msg):
             oberon_button = telebot.types.InlineKeyboardButton(text="Oberon", callback_data="Oberon")
             lady_button = telebot.types.InlineKeyboardButton(text="Lady of the Lake", callback_data="Lady of the Lake")
             keyboard.add(mordred_button, morgana_button, oberon_button, lady_button)
-            bot.send_message(msg.chat.id, "What role do you want to add?", reply_markup=keyboard)
+            msg = bot.send_message(msg.chat.id, "What role do you want to add?", reply_markup=keyboard)
+            players_id[msg.chat.id].del_msg.append(msg.message_id)
     except KeyError:
         bot.reply_to(msg, 'No registration started\nRun /start_registration')
 
