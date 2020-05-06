@@ -92,7 +92,8 @@ def make_roles(roles, additional):
                 if roles[teammate_key] == 'Oberon':
                     oberon = '\n@' + botbot.get_chat_member(teammate_key, teammate_key).user.username +\
                               ' is minion of Mordred'
-                if roles[teammate_key] not in tools.GameInfo.peaceful and roles[teammate_key] != 'Oberon':
+                if roles[teammate_key] not in tools.GameInfo.peaceful and roles[teammate_key] != 'Oberon' \
+                        and roles[teammate_key] != 'Mordred':
                     teamlist += '\n@' + botbot.get_chat_member(teammate_key, teammate_key).user.username +\
                                 ' is minion of Mordred'
             botbot.send_message(key, ('Minions of Mordred are:' + oberon if roles[key] == 'Merlin'

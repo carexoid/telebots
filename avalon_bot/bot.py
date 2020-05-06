@@ -76,6 +76,8 @@ def end_reg(msg):
             bot.reply_to(msg, 'Game is on!')
         else:
             if msg.from_user.id == players_id[msg.chat.id].creator:
+                players_id[msg.chat.id].exp_size = list.copy(
+                    tools.GameInfo.expedition_size[len(players_id[msg.chat.id].players)])
                 for id in players_id[msg.chat.id].del_msg:
                     bot.delete_message(chat_id=msg.chat.id, message_id=id)
                 players_id[msg.chat.id].del_msg = []
@@ -85,7 +87,7 @@ def end_reg(msg):
                 roles.make_roles(players_id[msg.chat.id].players, players_id[msg.chat.id].additional_roles)
                 players_id[msg.chat.id].order = list(players_id[msg.chat.id].players.keys())
                 random.shuffle(players_id[msg.chat.id].order)
-                #players_id[msg.chat.id].exp_size = list.copy(tools.GameInfo.expedition_size[len(players_id[msg.chat.id].players)])
+
                 string = ''
                 players_id[msg.chat.id].cur_king = 0
                 players_id[msg.chat.id].cur_lady = -1
@@ -107,9 +109,10 @@ def end_reg(msg):
                         bot.get_chat_member(msg.chat.id, lady_id).user.username))
                     players_id[msg.chat.id].past_lady.append(lady_id)
                 vote.send_voting(msg.chat.id, players_id[msg.chat.id])
+                players_id[msg.chat.id].state = 'game'
             else:
                 bot.reply_to(msg, 'You`re not creator of this game!')
-            players_id[msg.chat.id].state = 'game'
+
         print(players_id[msg.chat.id].players)
     except KeyError:
         bot.reply_to(msg, 'too few players to start')
@@ -162,7 +165,7 @@ def callback_inline(call):
                 bot.reply_to(call.message, 'No registration started!\nRun /start_registration')
                 return
             if players_id[call.message.chat.id].state == 'reg':
-                if call.from_user.id not in players_id[int(call.message.chat.id)].players:
+                if int(call.message.from_user.id) not in players_id[int(call.message.chat.id)].players:
                     if int(call.from_user.id) in chat_of_player.keys():
                         bot.send_message(int(call.from_user.id), 'You are in not ended game!')
                         return
@@ -292,12 +295,25 @@ def get_vote(msg):
             if sum > 0:
                 players_id[chat_id].state = 'exp'
                 players_id[chat_id].people_in_exp = dict()
+                players_id[chat_id].kings_in_row = 0
                 for id in players_id[chat_id].cur_exp:
                     players_id[chat_id].people_in_exp[id] = None
                 gameplay.start_exp(players_id[chat_id].cur_exp, chat_id)
             else:
                 players_id[chat_id].state = 'game'
                 players_id[chat_id].king_rotation()
+                players_id[chat_id].kings_in_row += 1
+                if players_id[chat_id].kings_in_row == 5:
+                    bot.send_message(chat_id, 'RIP Avalon!!')
+                    string = ""
+                    for item in players_id[chat_id].players.items():
+                        string += '\n@' + bot.get_chat_member(chat_id, item[0]).user.username + ' was ' + \
+                                  ('❤️' if item[1] in tools.GameInfo.peaceful else '🖤') + item[1]
+                    bot.send_message(chat_id, 'Roles in this game:' + string)
+                    for id in players_id[chat_id].players:
+                        chat_of_player.pop(id)
+                    players_id.pop(chat_id)
+                    return
                 string = ''
                 for i in range(0, len(players_id[chat_id].order)):
                     string += '\n' + str(i + 1) + '. @' \
@@ -311,6 +327,8 @@ def get_vote(msg):
                                  str(bot.get_chat_member(chat_id,
                                                          players_id[chat_id].order[
                                                              players_id[chat_id].cur_king]).user.username))
+                if players_id[chat_id].kings_in_row == 4:
+                    bot.send_message(chat_id, 'Next skipped expedition will result into Avalon collapse!!!')
 
                 players_id[chat_id].cur_exp = []
                 for player in players_id[chat_id].players.keys():
