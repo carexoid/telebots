@@ -33,6 +33,7 @@ class GameInfo:
         self.past_lady = []
         self.vote_msg_id = -1
         self.del_msg = []
+        self.kings_in_row = 0
 
     def change_roles(self, role):
         if self.additional_roles[role]:
