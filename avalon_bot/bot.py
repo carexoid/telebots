@@ -15,7 +15,8 @@ chat_of_player = dict()
 
 @bot.message_handler(commands=['start'])
 def start(msg):
-    bot.reply_to(msg, 'yooooy')
+    bot.send_sticker(msg.chat.id, "CAACAgIAAxkBAAMvXmY70ZzdsmncwzrQmiAelSD3Z5EAAm8BAALzVj8XnZO2J6flZasYBA",
+                     reply_to_message_id=msg.message_id)
 
 
 @bot.message_handler(commands=['leave'])
@@ -81,7 +82,7 @@ def end_reg(msg):
                 roles.make_roles(players_id[msg.chat.id].players, players_id[msg.chat.id].additional_roles)
                 players_id[msg.chat.id].order = list(players_id[msg.chat.id].players.keys())
                 random.shuffle(players_id[msg.chat.id].order)
-                # players_id[msg.chat.id].exp_size = list.copy(tools.GameInfo.expedition_size[len(players_id[msg.chat.id].players)])
+                players_id[msg.chat.id].exp_size = list.copy(tools.GameInfo.expedition_size[len(players_id[msg.chat.id].players)])
                 string = ''
                 players_id[msg.chat.id].cur_king = 0
                 players_id[msg.chat.id].cur_lady = -1
@@ -173,8 +174,8 @@ def callback_inline(call):
                     bot.send_message(call.from_user.id,
                                      'You`re registered for the Avalon game in ' + call.message.chat.title)
 
-                bot.send_message(call.from_user.id, 'You`re registered for the Avalon game in ' +
-                                 call.message.chat.title)
+                # bot.send_message(call.from_user.id, 'You`re registered for the Avalon game in ' +
+                #                  call.message.chat.title)
                 # bot.send_message(chat_id, len(players_id[int(chat_id)]))
             else:
                 bot.reply_to(call.message, 'Game is on!')
