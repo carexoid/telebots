@@ -2,12 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b5a4f684-143c-44da-81aa-a560e7ee4595" name="Default Changelist" comment="minimun 5 players required">
-      <change beforePath="$PROJECT_DIR$/.idea/avalon_bot.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/avalon_bot.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/roles.py" beforeDir="false" afterPath="$PROJECT_DIR$/roles.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,7 +31,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../sTaS" />
     <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyIntegratedToolsModulesConfigurable" />
   </component>
@@ -148,7 +144,9 @@
       <workItem from="1586434113153" duration="1121000" />
       <workItem from="1586551340432" duration="1198000" />
       <workItem from="1586951798719" duration="77000" />
-      <workItem from="1588784603000" duration="10037000" />
+      <workItem from="1588784603000" duration="16149000" />
+      <workItem from="1588875007830" duration="35000" />
+      <workItem from="1588882529941" duration="5761000" />
     </task>
     <task id="LOCAL-00001" summary="vote for expedition">
       <created>1584816072441</created>
@@ -323,46 +321,46 @@
       <screen x="0" y="32" width="1920" height="1048" />
     </state>
     <state x="785" y="315" width="340" height="484" key="EnvironmentVariablesDialog/0.32.1920.1048@0.32.1920.1048" timestamp="1588792104895" />
-    <state x="733" y="271" width="423" height="506" key="FileChooserDialogImpl" timestamp="1588792691144">
+    <state x="733" y="271" width="423" height="508" key="FileChooserDialogImpl" timestamp="1588884213880">
       <screen x="0" y="32" width="1920" height="1048" />
     </state>
-    <state x="733" y="271" width="423" height="506" key="FileChooserDialogImpl/0.32.1920.1048@0.32.1920.1048" timestamp="1588792691144" />
-    <state width="938" height="285" key="GridCell.Tab.0.bottom" timestamp="1588794535980">
+    <state x="733" y="271" width="423" height="508" key="FileChooserDialogImpl/0.32.1920.1048@0.32.1920.1048" timestamp="1588884213880" />
+    <state width="938" height="353" key="GridCell.Tab.0.bottom" timestamp="1588872459731">
       <screen x="0" y="32" width="1920" height="1048" />
     </state>
-    <state width="938" height="285" key="GridCell.Tab.0.bottom/0.32.1920.1048@0.32.1920.1048" timestamp="1588794535980" />
-    <state width="938" height="285" key="GridCell.Tab.0.center" timestamp="1588794535979">
+    <state width="938" height="353" key="GridCell.Tab.0.bottom/0.32.1920.1048@0.32.1920.1048" timestamp="1588872459731" />
+    <state width="938" height="353" key="GridCell.Tab.0.center" timestamp="1588872459731">
       <screen x="0" y="32" width="1920" height="1048" />
     </state>
-    <state width="938" height="285" key="GridCell.Tab.0.center/0.32.1920.1048@0.32.1920.1048" timestamp="1588794535979" />
-    <state width="938" height="285" key="GridCell.Tab.0.left" timestamp="1588794535979">
+    <state width="938" height="353" key="GridCell.Tab.0.center/0.32.1920.1048@0.32.1920.1048" timestamp="1588872459731" />
+    <state width="938" height="353" key="GridCell.Tab.0.left" timestamp="1588872459731">
       <screen x="0" y="32" width="1920" height="1048" />
     </state>
-    <state width="938" height="285" key="GridCell.Tab.0.left/0.32.1920.1048@0.32.1920.1048" timestamp="1588794535979" />
-    <state width="938" height="285" key="GridCell.Tab.0.right" timestamp="1588794535980">
+    <state width="938" height="353" key="GridCell.Tab.0.left/0.32.1920.1048@0.32.1920.1048" timestamp="1588872459731" />
+    <state width="938" height="353" key="GridCell.Tab.0.right" timestamp="1588872459731">
       <screen x="0" y="32" width="1920" height="1048" />
     </state>
-    <state width="938" height="285" key="GridCell.Tab.0.right/0.32.1920.1048@0.32.1920.1048" timestamp="1588794535980" />
-    <state width="938" height="353" key="GridCell.Tab.1.bottom" timestamp="1588793473527">
+    <state width="938" height="353" key="GridCell.Tab.0.right/0.32.1920.1048@0.32.1920.1048" timestamp="1588872459731" />
+    <state width="938" height="353" key="GridCell.Tab.1.bottom" timestamp="1588872459732">
       <screen x="0" y="32" width="1920" height="1048" />
     </state>
-    <state width="938" height="353" key="GridCell.Tab.1.bottom/0.32.1920.1048@0.32.1920.1048" timestamp="1588793473527" />
-    <state width="938" height="353" key="GridCell.Tab.1.center" timestamp="1588793473526">
+    <state width="938" height="353" key="GridCell.Tab.1.bottom/0.32.1920.1048@0.32.1920.1048" timestamp="1588872459732" />
+    <state width="938" height="353" key="GridCell.Tab.1.center" timestamp="1588872459732">
       <screen x="0" y="32" width="1920" height="1048" />
     </state>
-    <state width="938" height="353" key="GridCell.Tab.1.center/0.32.1920.1048@0.32.1920.1048" timestamp="1588793473526" />
-    <state width="938" height="353" key="GridCell.Tab.1.left" timestamp="1588793473526">
+    <state width="938" height="353" key="GridCell.Tab.1.center/0.32.1920.1048@0.32.1920.1048" timestamp="1588872459732" />
+    <state width="938" height="353" key="GridCell.Tab.1.left" timestamp="1588872459732">
       <screen x="0" y="32" width="1920" height="1048" />
     </state>
-    <state width="938" height="353" key="GridCell.Tab.1.left/0.32.1920.1048@0.32.1920.1048" timestamp="1588793473526" />
-    <state width="938" height="353" key="GridCell.Tab.1.right" timestamp="1588793473527">
+    <state width="938" height="353" key="GridCell.Tab.1.left/0.32.1920.1048@0.32.1920.1048" timestamp="1588872459732" />
+    <state width="938" height="353" key="GridCell.Tab.1.right" timestamp="1588872459732">
       <screen x="0" y="32" width="1920" height="1048" />
     </state>
-    <state width="938" height="353" key="GridCell.Tab.1.right/0.32.1920.1048@0.32.1920.1048" timestamp="1588793473527" />
-    <state x="189" y="125" width="1536" height="874" key="MergeDialog" timestamp="1585174163463">
+    <state width="938" height="353" key="GridCell.Tab.1.right/0.32.1920.1048@0.32.1920.1048" timestamp="1588872459732" />
+    <state x="189" y="125" width="1536" height="874" key="MergeDialog" timestamp="1588797573669">
       <screen x="0" y="32" width="1920" height="1048" />
     </state>
-    <state x="189" y="125" width="1536" height="874" key="MergeDialog/0.32.1920.1048@0.32.1920.1048" timestamp="1585174163463" />
+    <state x="189" y="125" width="1536" height="874" key="MergeDialog/0.32.1920.1048@0.32.1920.1048" timestamp="1588797573669" />
     <state x="657" y="274" width="610" height="570" key="MultipleFileMergeDialog" timestamp="1585595386297">
       <screen x="0" y="32" width="1920" height="1048" />
     </state>
@@ -379,17 +377,17 @@
       <screen x="0" y="32" width="1920" height="1048" />
     </state>
     <state x="483" y="161" width="944" height="795" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.32.1920.1048@0.32.1920.1048" timestamp="1585157130820" />
-    <state x="699" y="476" width="521" height="166" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1585763591704">
+    <state x="699" y="476" width="521" height="170" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1588797534380">
       <screen x="0" y="32" width="1920" height="1048" />
     </state>
-    <state x="699" y="476" width="521" height="166" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.32.1920.1048@0.32.1920.1048" timestamp="1585763591704" />
+    <state x="699" y="476" width="521" height="170" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.32.1920.1048@0.32.1920.1048" timestamp="1588797534380" />
     <state x="623" y="263" width="672" height="678" key="search.everywhere.popup" timestamp="1588794326956">
       <screen x="0" y="32" width="1920" height="1048" />
     </state>
     <state x="623" y="263" width="672" height="678" key="search.everywhere.popup/0.32.1920.1048@0.32.1920.1048" timestamp="1588794326956" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/avalon_bot$bot.coverage" NAME="bot Coverage Results" MODIFIED="1588794925717" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/avalon_bot$bot.coverage" NAME="bot Coverage Results" MODIFIED="1588866700249" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/avalon_bot$Unnamed.coverage" NAME="Unnamed Coverage Results" MODIFIED="1584735309674" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
   </component>
 </project>
