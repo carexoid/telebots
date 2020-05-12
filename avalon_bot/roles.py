@@ -1,10 +1,10 @@
 import random
 import telebot
-import teletoken
-import bot
 import tools
 
-botbot = telebot.TeleBot(teletoken.token)
+from setup import bot, bot_send_message
+
+botbot = bot
 
 
 def shuffle_roles(size, additional):
@@ -79,8 +79,8 @@ def make_roles(roles, additional):
         index = index + 1
     for key in roles:
         send_text = "Your role is " + roles[key]
-        botbot.send_message(key, send_text)
-        botbot.send_message(key, roles_description[roles[key]])
+        bot_send_message(key, send_text)
+        bot_send_message(key, roles_description[roles[key]])
         teamlist = ''
         mordred = ''
         oberon = ''
@@ -96,12 +96,12 @@ def make_roles(roles, additional):
                         and roles[teammate_key] != 'Mordred':
                     teamlist += '\n@' + botbot.get_chat_member(teammate_key, teammate_key).user.username +\
                                 ' is minion of Mordred'
-            botbot.send_message(key, ('Minions of Mordred are:' + oberon if roles[key] == 'Merlin'
+            bot_send_message(key, ('Minions of Mordred are:' + oberon if roles[key] == 'Merlin'
                                       else 'Your teammates are:' + mordred) + teamlist)
         if roles[key] == 'Percival':
             for teammate_key in roles.keys():
                 if roles[teammate_key] == 'Merlin' or roles[teammate_key] == 'Morgana':
                     teamlist += '\n@' + botbot.get_chat_member(key, key).user.username
-            botbot.send_message(key, 'Merlin is one of them:' + teamlist)
+            bot_send_message(key, 'Merlin is one of them:' + teamlist)
 
     return roles

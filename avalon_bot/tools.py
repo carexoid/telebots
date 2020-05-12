@@ -38,18 +38,18 @@ class GameInfo:
     def change_roles(self, role):
         if self.additional_roles[role]:
             self.additional_roles[role] = False
-            return " has removed"
+            return " has been removed"
         else:
             self.additional_roles[role] = True
-            return " has added"
+            return " has been added"
 
     def change_lady(self):
         if self.lady_lake:
             self.lady_lake = False
-            return " has removed"
+            return " has been removed"
         else:
             self.lady_lake = True
-            return " has added"
+            return " has been added"
 
     def king_rotation(self):
         self.cur_king = (self.cur_king + 1) % len(self.order)
