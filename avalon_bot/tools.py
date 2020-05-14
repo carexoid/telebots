@@ -59,7 +59,7 @@ class GameInfo:
 
     def pass_lady(self, to):
         index = 0
-        for i in self.players:
+        for i in self.order:      # Lady bug was here (probably)  ?players instead of order?
             if i == to:
                 self.cur_lady = index
             index = index + 1

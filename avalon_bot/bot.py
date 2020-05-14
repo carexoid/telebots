@@ -208,9 +208,13 @@ def callback_inline(call):
                 else:
                     bot.reply_to(call.message, 'Game is on!')
             elif call.data == "Lady of the Lake":
+                if players_id[chat_id].creator != int(call.from_user.id):
+                    return
                 out = players_id[chat_id].change_lady()
                 bot_send_message(chat_id, call.data + out)
             elif call.data == "Morgana" or call.data == "Oberon" or call.data == "Mordred":
+                if players_id[chat_id].creator != int(call.from_user.id):
+                    return
                 out = players_id[chat_id].change_roles(call.data)
                 bot_send_message(chat_id, call.data + out)
             elif call.data[0] == 'v':
@@ -395,6 +399,15 @@ def get_exp_choice(msg):
             players_id[chat_id].failed_exp += 1
         if players_id[chat_id].failed_exp == 3:
             bot_send_message(chat_id, 'RIP Avalon!')
+            string = ""
+            for item in players_id[chat_id].players.items():
+                string += '\n@' + bot.get_chat_member(chat_id, item[0]).user.username + ' was ' + \
+                          ('❤️' if item[1] in tools.GameInfo.peaceful else '🖤') + item[1]
+            bot_send_message(chat_id, 'Roles in this game:' + string)
+            for id in players_id[chat_id].players:
+                chat_of_player.pop(id)
+            players_id.pop(chat_id)
+            return
         elif players_id[chat_id].successful_exp == 3:
             keyboard = telebot.types.InlineKeyboardMarkup()
             for id in players_id[chat_id].players:

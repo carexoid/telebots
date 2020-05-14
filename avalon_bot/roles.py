@@ -101,7 +101,7 @@ def make_roles(roles, additional):
         if roles[key] == 'Percival':
             for teammate_key in roles.keys():
                 if roles[teammate_key] == 'Merlin' or roles[teammate_key] == 'Morgana':
-                    teamlist += '\n@' + botbot.get_chat_member(key, key).user.username
+                    teamlist += '\n@' + botbot.get_chat_member(teammate_key, teammate_key).user.username
             bot_send_message(key, 'Merlin is one of them:' + teamlist)
 
     return roles

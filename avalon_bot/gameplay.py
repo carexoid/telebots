@@ -45,7 +45,10 @@ def endgame(chat_id, game_info, dead_id):
     if game_info.players[dead_id] == 'Merlin':
         bot_send_message(chat_id, 'Merlin was killed')
     else:
-        bot_send_message(chat_id, 'Merlin is alive!\n' + game_info.players[dead_id] + ' was killed')
+        try:
+            bot_send_message(chat_id, 'Merlin is alive!\n' + game_info.players[dead_id] + ' was killed')
+        except KeyError:
+            return
     string = ''
     for item in game_info.players.items():
         string += '\n@' + bot.get_chat_member(chat_id, item[0]).user.username + ' was ' + \
