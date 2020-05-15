@@ -236,7 +236,10 @@ def callback_inline(call):
                     bot.reply_to(call.message, 'No registration started!\nRun /start_registration')
                     return
                 if players_id[call.message.chat.id].state == 'reg':
-                    if int(call.message.from_user.id) not in players_id[int(call.message.chat.id)].players:
+                    if not call.from_user.username:
+                        bot_send_message(call.from_user.id, "Your telegram account has no username")
+                        return
+                    if int(call.from_user.id) not in players_id[int(call.message.chat.id)].players:
                         if int(call.from_user.id) in chat_of_player.keys():
                             bot_send_message(int(call.from_user.id), 'You are in not ended game!')
                             return
