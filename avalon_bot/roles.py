@@ -9,6 +9,11 @@ botbot = bot
 
 def shuffle_roles(size, additional):
     roles = []
+
+    if size == 1: roles = ['Merlin']
+
+    if size == 2: roles = ['Assassin', 'Minion of Mordred']
+
     if size == 5:
         roles = ['Loyal Servant of Arthur', 'Merlin', 'Percival',
                  'Assassin']
@@ -86,17 +91,17 @@ def make_roles(roles, additional):
         if (roles[key] not in tools.GameInfo.peaceful and roles[key] != 'Oberon') or roles[key] == 'Merlin':
             for teammate_key in roles.keys():
                 if roles[teammate_key] == 'Mordred':
-                    mordred = '\n@' + botbot.get_chat_member(teammate_key, teammate_key).user.username +\
+                    mordred = '\n@' + botbot.get_chat_member(teammate_key, teammate_key).user.username + \
                               ' is minion of Mordred'
                 if roles[teammate_key] == 'Oberon':
-                    oberon = '\n@' + botbot.get_chat_member(teammate_key, teammate_key).user.username +\
-                              ' is minion of Mordred'
+                    oberon = '\n@' + botbot.get_chat_member(teammate_key, teammate_key).user.username + \
+                             ' is minion of Mordred'
                 if roles[teammate_key] not in tools.GameInfo.peaceful and roles[teammate_key] != 'Oberon' \
                         and roles[teammate_key] != 'Mordred':
-                    teamlist += '\n@' + botbot.get_chat_member(teammate_key, teammate_key).user.username +\
+                    teamlist += '\n@' + botbot.get_chat_member(teammate_key, teammate_key).user.username + \
                                 ' is minion of Mordred'
             bot_send_message(key, ('Minions of Mordred are:' + oberon if roles[key] == 'Merlin'
-                                      else 'Your teammates are:' + mordred) + teamlist)
+                                   else 'Your teammates are:' + mordred) + teamlist)
         if roles[key] == 'Percival':
             for teammate_key in roles.keys():
                 if roles[teammate_key] == 'Merlin' or roles[teammate_key] == 'Morgana':

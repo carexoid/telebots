@@ -12,9 +12,6 @@ players_id = dict()
 chat_of_player = dict()
 
 
-
-
-
 @bot.message_handler(commands=['start'])
 def start(msg):
     bot.send_sticker(msg.chat.id, "CAACAgIAAxkBAAMvXmY70ZzdsmncwzrQmiAelSD3Z5EAAm8BAALzVj8XnZO2J6flZasYBA",
@@ -27,7 +24,58 @@ def leave(msg):
         bot_send_message(msg.from_user.id, "You don`t take part in any game")
         return
     if players_id[chat_of_player[msg.from_user.id]].state != 'reg':
-        bot.reply_to(msg, 'You can leave only during registration')
+        if msg.from_user.id not in chat_of_player.keys():
+            return
+        bot.reply_to(msg, 'You have left the game')
+        currChat = chat_of_player[msg.from_user.id]
+        if players_id[currChat].players[msg.from_user.id] == "Merlin":
+            bot_send_message(currChat, 'Merlin has left the game\n\nRIP Avalon!!')
+            for id in players_id[currChat].del_msg:
+                bot.delete_message(chat_id=currChat, message_id=id)
+            string = ""
+            for item in players_id[currChat].players.items():
+                string += '\n@' + bot.get_chat_member(currChat, item[0]).user.username + ' was ' + \
+                          ('❤️' if item[1] in tools.GameInfo.peaceful else '🖤') + item[1]
+            bot_send_message(currChat, 'Roles in this game:' + string)
+            for id in players_id[currChat].players:
+                chat_of_player.pop(id)
+            players_id.pop(currChat)
+            return
+        if players_id[currChat].players[msg.from_user.id] == "Assassin":
+            for item in players_id[currChat].players.keys():
+                if players_id[currChat].players[item] not in players_id[currChat].peaceful:
+                    bot.send_message(item, "You are the new Assassin")
+                    players_id[currChat].players[item] = 'Assassin'
+                    break
+        print(msg.from_user)
+        #print(chat_of_player[currChat].order)
+        #print(chat_of_player[currChat].cur_king)
+        #print(msg.from_user.username)
+        if players_id[currChat].order[players_id[currChat].cur_king] == msg.from_user.username:
+            players_id[currChat].cur_king = (players_id[currChat].cur_king + 1) % \
+                                               (len(players_id[currChat].order) - 1)
+        if players_id[currChat].lady_lake and players_id[currChat].order[players_id[currChat].cur_lady] == msg.from_user.username:
+            players_id[currChat].cur_lady = (players_id[currChat].cur_lady + 1) % \
+                                               (len(players_id[currChat].order) - 1)
+        if msg.from_user.id in players_id.keys():
+            players_id.pop(msg.from_user.id)
+        print(players_id[currChat].order)
+        for i in range(len(players_id[currChat].order)):
+            if players_id[currChat].order[i] == msg.from_user.id:
+                players_id[currChat].order.pop(i)
+                break
+        #players_id[currChat].order.pop(msg.from_user.id)
+        chat_of_player.pop(msg.from_user.id)
+        players_id[currChat].players.pop(msg.from_user.id)
+        if len(players_id[currChat].players) == 0:
+            bot.send_message(currChat, "All players have left the game")
+            for id in players_id[currChat].del_msg:
+                bot.delete_message(chat_id=currChat, message_id=id)
+            players_id[currChat].del_msg = []
+            for player in players_id[currChat].players.keys():
+                chat_of_player.pop(player)
+            players_id.pop(currChat)
+            bot.send_message(currChat, 'Game aborted')
         return
     if msg.from_user.id in chat_of_player.keys():
         chat_of_player.pop(msg.from_user.id)
@@ -63,8 +111,8 @@ def start_reg(msg):
                                                                                                       'launch the game')
         except telebot.apihelper.ApiException:
             bot_send_message(msg.chat.id, 'To be able to register in game, '
-                                      'say /start to @Avalon117bot in private messages '
-                                      'and push registration button again')
+                                          'say /start to @Avalon117bot in private messages '
+                                          'and push registration button again')
             return
 
         players_id[msg.chat.id] = tools.GameInfo('reg', msg.from_user.id, dict(), msg)
@@ -89,8 +137,8 @@ def end_reg(msg):
             bot.reply_to(msg, 'Game is on!')
         else:
             if msg.from_user.id == players_id[msg.chat.id].creator:
-                # players_id[msg.chat.id].exp_size = list.copy(
-                #     tools.GameInfo.expedition_size[len(players_id[msg.chat.id].players)])
+                players_id[msg.chat.id].exp_size = list.copy(
+                    tools.GameInfo.expedition_size[len(players_id[msg.chat.id].players)])
                 for id in players_id[msg.chat.id].del_msg:
                     bot.delete_message(chat_id=msg.chat.id, message_id=id)
                 players_id[msg.chat.id].del_msg = []
@@ -109,7 +157,8 @@ def end_reg(msg):
                               + str(bot.get_chat_member(msg.chat.id, players_id[msg.chat.id].order[i]).user.username)
                     if i == players_id[msg.chat.id].cur_king % len(players_id[msg.chat.id].order):
                         string += '👑'
-                    if players_id[msg.chat.id].lady_lake and i == players_id[msg.chat.id].cur_lady % len(players_id[msg.chat.id].order):
+                    if players_id[msg.chat.id].lady_lake and i == players_id[msg.chat.id].cur_lady % len(
+                            players_id[msg.chat.id].order):
                         string += '👸'
                 bot_send_message(msg.chat.id, 'Players order:' + string)
                 players_id[msg.chat.id].checked.append(players_id[msg.chat.id].order[-1])
@@ -141,6 +190,18 @@ def add_roles(msg):
             if msg.from_user.id != players_id[msg.chat.id].creator:
                 bot_send_message(msg.chat.id, "You`re not creator of this game!")
                 return
+            bot.send_message(msg.chat.id,
+                             "Morgana, a minion of Mordred, deceives Percival. During the beginning round where "
+                             "Merlin puts his "
+                             "thumb in the air to reveal himself to Percival, Morgana also raises her own thumb, "
+                             "confusing Percival as to which 'Merlin' to trust.\n\n"
+                             "Oberon despite being a servant of Mordred, is somewhat of "
+                             "a hindrance. Oberon does not reveal himself to evil players, and also they do not reveal "
+                             "themselves to him. Oberon still raises his thumb for Merlin to see, however.\n\n"
+                             "Mordred helps the evil side because Merlin does not know his identity. As Mordred, "
+                             "it is imperative that you recognize your unique situation because you "
+                             'will be able to watch the votes to see how everyone votes for teams to which the other '
+                             'minions belong.')
             keyboard = telebot.types.InlineKeyboardMarkup()
             morgana_button = telebot.types.InlineKeyboardButton(text="Morgana", callback_data="Morgana")
             mordred_button = telebot.types.InlineKeyboardButton(text="Mordred", callback_data="Mordred")
@@ -155,7 +216,6 @@ def add_roles(msg):
 
 @bot.callback_query_handler(func=lambda call: True)
 def callback_inline(call):
-
     chat_id = int(call.message.chat.id)
     try:
         if call.message:
@@ -180,7 +240,10 @@ def callback_inline(call):
                     bot.reply_to(call.message, 'No registration started!\nRun /start_registration')
                     return
                 if players_id[call.message.chat.id].state == 'reg':
-                    if int(call.message.from_user.id) not in players_id[int(call.message.chat.id)].players:
+                    if not call.from_user.username:
+                        bot_send_message(call.from_user.id, "Your telegram account has no username")
+                        return
+                    if int(call.from_user.id) not in players_id[int(call.message.chat.id)].players:
                         if int(call.from_user.id) in chat_of_player.keys():
                             bot_send_message(int(call.from_user.id), 'You are in not ended game!')
                             return
@@ -201,10 +264,10 @@ def callback_inline(call):
                         add_button = telebot.types.InlineKeyboardButton(text="Register", callback_data="register")
                         keyboard.add(add_button)
                         text = call.message.text + ' @' + call.from_user.username
-                        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=text,
+                        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
+                                              text=text,
                                               reply_markup=keyboard)
                         players_id[call.message.chat.id].reg_btn = call.message
-
 
                     # bot_send_message(call.from_user.id, 'You`re registered for the Avalon game in ' +
                     #                  call.message.chat.title)
@@ -242,7 +305,8 @@ def callback_inline(call):
             elif call.data == 'send_expedition':
                 if call.from_user.id != players_id[chat_id].order[players_id[chat_id].cur_king]:
                     return
-                if len(players_id[chat_id].cur_exp) != players_id[chat_id].exp_size[players_id[chat_id].get_num_of_exp()]:
+                if len(players_id[chat_id].cur_exp) != players_id[chat_id].exp_size[
+                    players_id[chat_id].get_num_of_exp()]:
                     bot_send_message(chat_id, 'Wrong number of expeditors')
                     return
                 string = ''
@@ -357,9 +421,8 @@ def get_vote(msg):
                               + str(bot.get_chat_member(chat_id, players_id[chat_id].order[i]).user.username)
                     if i == players_id[chat_id].cur_king % len(players_id[chat_id].order):
                         string += '👑'
-                    if players_id[chat_id].lady_lake and \
-                            players_id[chat_id].lady_lake and \
-                            i == players_id[chat_id].cur_lady % len(players_id[chat_id].order):
+                    if players_id[chat_id].lady_lake and players_id[chat_id].lady_lake and i == players_id[
+                        chat_id].cur_lady % len(players_id[chat_id].order):
                         string += '👸'
                 bot_send_message(chat_id, 'Players order:' + string)
                 bot_send_message(chat_id, 'New King is @' +
@@ -411,7 +474,7 @@ def get_exp_choice(msg):
                              str(players_id[chat_id].failed_exp) + ' failed expeditions')
             players_id[chat_id].successful_exp += 1
         else:
-            bot_send_message(chat_id, 'Expedition was failed\nNum of black cards is ' + str(exp_res[1])+ '\n\n' +
+            bot_send_message(chat_id, 'Expedition was failed\nNum of black cards is ' + str(exp_res[1]) + '\n\n' +
                              str(players_id[chat_id].successful_exp) + ' successful expeditions\n' +
                              str(players_id[chat_id].failed_exp + 1) + ' failed expeditions')
             players_id[chat_id].failed_exp += 1
