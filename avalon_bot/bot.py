@@ -44,8 +44,12 @@ def leave(msg):
             reg = reg + ' @' + str(bot.get_chat_member(chat, user).user.username)
 
         print(reg)
-        bot.edit_message_text(chat_id=chat, message_id=reg_msg.message_id, text=reg,
-                              reply_markup=keyboard)
+        try:
+
+            bot.edit_message_text(chat_id=chat, message_id=reg_msg.message_id, text=reg,
+                                  reply_markup=keyboard)
+        except:
+            return
         bot_send_message(msg.from_user.id, "You have left the game")
 
 
@@ -183,7 +187,7 @@ def callback_inline(call):
                         try:
 
                             bot.send_message(call.from_user.id,
-                                             'You`re registered for the Avalon game in ' + call.message.chat.title)
+                                             'You`re registered for the Avalon game in ' + str(call.message.chat.title))
                         except telebot.apihelper.ApiException:
                             bot_send_message(chat_id, 'To be able to register in game, '
                                                       'say /start to @Avalon117bot in private messages '
