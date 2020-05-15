@@ -89,8 +89,8 @@ def end_reg(msg):
             bot.reply_to(msg, 'Game is on!')
         else:
             if msg.from_user.id == players_id[msg.chat.id].creator:
-                players_id[msg.chat.id].exp_size = list.copy(
-                    tools.GameInfo.expedition_size[len(players_id[msg.chat.id].players)])
+                # players_id[msg.chat.id].exp_size = list.copy(
+                #     tools.GameInfo.expedition_size[len(players_id[msg.chat.id].players)])
                 for id in players_id[msg.chat.id].del_msg:
                     bot.delete_message(chat_id=msg.chat.id, message_id=id)
                 players_id[msg.chat.id].del_msg = []
@@ -272,6 +272,14 @@ def callback_inline(call):
                     check = " is servant of Mordred"
                 bot_send_message(lady_id, '@' + nickname + check)
                 bot_send_message(chat, '@' + nickname + " is new Lady of the Lake")
+                try:
+                    players_id[chat].cur_exp = []
+                    for player in players_id[chat].players.keys():
+                        players_id[chat].cur_voting_for_exp[player] = None
+                    vote.send_voting(chat, players_id[chat])
+                except KeyError:
+                    print(KeyError)
+
     except telebot.apihelper.ApiException:
         print("stop DDOSing buttons!")
     except KeyError:
@@ -298,6 +306,8 @@ def abort(msg):
 @bot.message_handler(func=lambda message: message.text and ("I like this expedition" in message.text
                                                             or 'I don`t like it' in message.text))
 def get_vote(msg):
+    if msg.from_user.id != msg.chat.id:
+        return
     try:
         chat_id = chat_of_player[msg.from_user.id]
         if players_id[chat_id].state == 'vote':
@@ -347,7 +357,9 @@ def get_vote(msg):
                               + str(bot.get_chat_member(chat_id, players_id[chat_id].order[i]).user.username)
                     if i == players_id[chat_id].cur_king % len(players_id[chat_id].order):
                         string += '👑'
-                    if players_id[chat_id].lady_lake and  players_id[chat_id].lady_lake and i == players_id[chat_id].cur_lady % len(players_id[chat_id].order):
+                    if players_id[chat_id].lady_lake and \
+                            players_id[chat_id].lady_lake and \
+                            i == players_id[chat_id].cur_lady % len(players_id[chat_id].order):
                         string += '👸'
                 bot_send_message(chat_id, 'Players order:' + string)
                 bot_send_message(chat_id, 'New King is @' +
@@ -371,6 +383,8 @@ def get_vote(msg):
 @bot.message_handler(func=lambda message: message.text and ("Approve" in message.text
                                                             or 'Reject' in message.text))
 def get_exp_choice(msg):
+    if msg.from_user.id != msg.chat.id:
+        return
     try:
         chat_id = chat_of_player[msg.from_user.id]
         if players_id[chat_id].state != 'exp':
@@ -417,7 +431,8 @@ def get_exp_choice(msg):
             for id in players_id[chat_id].players:
                 if players_id[chat_id].players[id] in tools.GameInfo.peaceful:
                     nickname = '@' + str(bot.get_chat_member(chat_id, id).user.username)
-                    btn = telebot.types.InlineKeyboardButton(text=nickname, callback_data='a' + nickname + ' ' + str(chat_id))
+                    btn = telebot.types.InlineKeyboardButton(text=nickname,
+                                                             callback_data='a' + nickname + ' ' + str(chat_id))
                     keyboard.add(btn)
             bot_send_message(chat_id, 'Time to shot for Assassin')
             for i in players_id[chat_id].players:
@@ -442,8 +457,10 @@ def get_exp_choice(msg):
                                                          players_id[chat_id].cur_king]).user.username))
             bot_send_message(chat_id, 'Next expedition is for ' +
                              str(players_id[chat_id].exp_size[players_id[chat_id].get_num_of_exp()]) + ' people')
-            if players_id[chat_id].get_num_of_exp() > 1:
+            if players_id[chat_id].get_num_of_exp() > 1 and \
+                    len(players_id[chat_id].checked) < len(players_id[chat_id].order):
                 gameplay.lady_check(chat_id, players_id[chat_id])
+                return
 
             players_id[chat_id].cur_exp = []
             for player in players_id[chat_id].players.keys():
