@@ -26,6 +26,7 @@ class GameInfo:
             'Mordred': False,
             'Oberon': False
         }
+        self.additional_id = -1
         self.lady_lake = False
         self.order = []
         self.checked = []
