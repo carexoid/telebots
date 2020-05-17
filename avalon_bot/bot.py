@@ -214,6 +214,7 @@ def add_roles(msg):
             keyboard.add(mordred_button, morgana_button, oberon_button, lady_button)
             msg = bot_send_message(msg.chat.id, "What role do you want to add?", reply_markup=keyboard)
             players_id[msg.chat.id].del_msg.append(msg.message_id)
+            players_id[msg.chat.id].additional_id = msg.message_id
     except KeyError:
         bot.reply_to(msg, 'No registration started\nRun /start_registration')
 
@@ -282,12 +283,16 @@ def callback_inline(call):
                 if players_id[chat_id].creator != int(call.from_user.id):
                     return
                 out = players_id[chat_id].change_lady()
-                bot_send_message(chat_id, call.data + out)
+                keyboard = vote.add_roles_btn(players_id[chat_id])
+                bot.edit_message_reply_markup(chat_id=chat_id, message_id=players_id[chat_id].additional_id,
+                                              reply_markup=keyboard)
             elif call.data == "Morgana" or call.data == "Oberon" or call.data == "Mordred":
                 if players_id[chat_id].creator != int(call.from_user.id):
                     return
                 out = players_id[chat_id].change_roles(call.data)
-                bot_send_message(chat_id, call.data + out)
+                keyboard = vote.add_roles_btn(players_id[chat_id])
+                bot.edit_message_reply_markup(chat_id=chat_id, message_id=players_id[chat_id].additional_id,
+                                              reply_markup=keyboard)
             elif call.data[0] == 'v':
                 if call.from_user.id != players_id[chat_id].order[players_id[chat_id].cur_king]:
                     return
