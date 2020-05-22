@@ -5,20 +5,20 @@ from bot import bot_send_message
 from tools import GameInfo
 
 from setup import bot, bot_send_message
-
+from global_variables import languages
 
 def vote_for_exp(expeditors, chat_id):
     keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True)
-    keyboard.row('👍I like this expedition', '👎🏿I don`t like it')
+    keyboard.row('👍' + languages[chat_id]['I like this expedition'], '👎🏿' + languages[chat_id]['I don`t like it'])
     for player_id in expeditors:
-        bot_send_message(player_id, 'Do you like this expedition?', reply_markup=keyboard)
+        bot_send_message(player_id, languages[chat_id]['Do you like this expedition?'], reply_markup=keyboard)
 
 
 def start_exp(expeditors, chat_id):
     keyboard = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True)
-    keyboard.row('❤️ Approve', '🖤 Reject')
+    keyboard.row('❤️ ' + languages[chat_id]['Approve'], '🖤 ' + languages[chat_id]['Reject'])
     for player_id in expeditors:
-        bot_send_message(player_id, 'Your choice in expedition', reply_markup=keyboard)
+        bot_send_message(player_id, languages[chat_id]['Your choice in expedition?'], reply_markup=keyboard)
 
 
 def exp_successful(red_cards, num_of_expeditors, num_of_exp, num_of_players):
@@ -43,15 +43,15 @@ def lady_check(chat_id, game_info):
 
 def endgame(chat_id, game_info, dead_id):
     if game_info.players[dead_id] == 'Merlin':
-        bot_send_message(chat_id, 'Merlin was killed')
+        bot_send_message(chat_id, languages[chat_id]['Merlin was killed'])
     else:
         try:
-            bot_send_message(chat_id, 'Merlin is alive!\n' + game_info.players[dead_id] + ' was killed')
+            bot_send_message(chat_id, languages[chat_id]['Merlin is alive!'] + '\n' + game_info.players[dead_id] + languages[chat_id][' was killed'])
         except KeyError:
             return
     string = ''
     for item in game_info.players.items():
-        string += '\n@' + bot.get_chat_member(chat_id, item[0]).user.username + ' was ' + \
+        string += '\n@' + bot.get_chat_member(chat_id, item[0]).user.username + languages[chat_id][' was '] + \
                   ('❤️' if item[1] in tools.GameInfo.peaceful else '🖤') + item[1]
-    bot_send_message(chat_id, 'Roles in this game:' + string)
+    bot_send_message(chat_id, languages[chat_id]['Roles in this game:'] + string)
 

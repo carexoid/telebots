@@ -1,3 +1,6 @@
+from language import Language, State
+from global_variables import languages
+
 class GameInfo:
     expedition_size = {5: [2, 3, 2, 3, 3],
                        6: [2, 3, 4, 3, 4],
@@ -35,6 +38,12 @@ class GameInfo:
         self.vote_msg_id = -1
         self.del_msg = []
         self.kings_in_row = 0
+        self.chat_id = msg.chat.id
+        try:
+            self.language = languages[self.chat_id]
+        except KeyError:
+            self.language = Language()
+            languages[self.chat_id] = self.language
 
     def change_roles(self, role):
         if self.additional_roles[role]:

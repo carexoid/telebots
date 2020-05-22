@@ -4,6 +4,7 @@ import tools
 
 from setup import bot, bot_send_message
 
+from global_variables import languages
 botbot = bot
 
 
@@ -44,7 +45,7 @@ def shuffle_roles(size, additional):
     return roles
 
 
-def make_roles(roles, additional):
+def make_roles(roles, additional, chat_id):
     roles_list = shuffle_roles(len(roles), additional)
     index = 0
     roles_description = {
@@ -82,7 +83,7 @@ def make_roles(roles, additional):
         roles[key] = roles_list[index]
         index = index + 1
     for key in roles:
-        send_text = "Your role is " + roles[key]
+        send_text = languages[chat_id]["Your role is "] + roles[key]
         bot_send_message(key, send_text)
         bot_send_message(key, roles_description[roles[key]])
         teamlist = ''
@@ -92,20 +93,20 @@ def make_roles(roles, additional):
             for teammate_key in roles.keys():
                 if roles[teammate_key] == 'Mordred':
                     mordred = '\n@' + botbot.get_chat_member(teammate_key, teammate_key).user.username + \
-                              ' is minion of Mordred'
+                              languages[chat_id][' is minion of Mordred']
                 if roles[teammate_key] == 'Oberon':
                     oberon = '\n@' + botbot.get_chat_member(teammate_key, teammate_key).user.username + \
-                             ' is minion of Mordred'
+                             languages[chat_id][' is minion of Mordred']
                 if roles[teammate_key] not in tools.GameInfo.peaceful and roles[teammate_key] != 'Oberon' \
                         and roles[teammate_key] != 'Mordred':
                     teamlist += '\n@' + botbot.get_chat_member(teammate_key, teammate_key).user.username + \
-                                ' is minion of Mordred'
-            bot_send_message(key, ('Minions of Mordred are:' + oberon if roles[key] == 'Merlin'
-                                   else 'Your teammates are:' + mordred) + teamlist)
+                                languages[chat_id][' is minion of Mordred']
+            bot_send_message(key, (languages[chat_id]['Minions of Mordred are:'] + oberon if roles[key] == 'Merlin'
+                                   else languages[chat_id]['Your teammates are:'] + mordred) + teamlist)
         if roles[key] == 'Percival':
             for teammate_key in roles.keys():
                 if roles[teammate_key] == 'Merlin' or roles[teammate_key] == 'Morgana':
                     teamlist += '\n@' + botbot.get_chat_member(teammate_key, teammate_key).user.username
-            bot_send_message(key, 'Merlin is one of them:' + teamlist)
+            bot_send_message(key, languages[chat_id]['Merlin is one of them:'] + teamlist)
 
     return roles
