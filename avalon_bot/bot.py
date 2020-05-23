@@ -147,8 +147,8 @@ def end_reg(msg):
             bot.reply_to(msg, languages[msg.chat.id]['Game is on!'])
         else:
             if msg.from_user.id == players_id[msg.chat.id].creator:
-                # players_id[msg.chat.id].exp_size = list.copy(
-                #     tools.GameInfo.expedition_size[len(players_id[msg.chat.id].players)])
+                players_id[msg.chat.id].exp_size = list.copy(
+                    tools.GameInfo.expedition_size[len(players_id[msg.chat.id].players)])
                 for id in players_id[msg.chat.id].del_msg:
                     bot.delete_message(chat_id=msg.chat.id, message_id=id)
                 players_id[msg.chat.id].del_msg = []
@@ -190,7 +190,7 @@ def end_reg(msg):
 
         print(players_id[msg.chat.id].players)
     except KeyError:
-        bot.reply_to(msg, 'Wrong number of players to start, this game is for 5 - 10 players')
+        bot.reply_to(msg, languages[msg.chat.id]['Wrong number of players to start, this game is for 5 - 10 players'])
     except:
         print("govniashki")
 
@@ -234,6 +234,7 @@ def add_roles(msg):
         except KeyError:
             bot.reply_to(msg, 'No registration started!' + '\n' + 'Run /start_registration')
             return
+
 
 @bot.callback_query_handler(func=lambda call: True)
 def callback_inline(call):
@@ -445,9 +446,9 @@ def get_vote(msg):
             print(msg.text)
             print(chat_id)
             if not players_id[chat_id].cur_voting_for_exp[msg.from_user.id]:
-                players_id[chat_id].cur_voting_for_exp[msg.from_user.id] = (1 if msg.text.split()[1] == languages[msg.chat.id]['like'] else -1)
+                players_id[chat_id].cur_voting_for_exp[msg.from_user.id] = (1 if (msg.text.split()[1] == 'like' or msg.text.split()[1] == 'нравится' or msg.text.split()[1] == 'подобається') else -1)
                 keyboard = telebot.types.ReplyKeyboardMarkup()
-                bot_send_message(msg.chat.id, languages[msg.chat.id]["You voted for this expedition"], reply_markup=None)
+                bot_send_message(msg.chat.id, languages[chat_id]["You voted for this expedition"], reply_markup=None)
             sum = 0
             people_votes = ''
             for vote_i in players_id[chat_id].cur_voting_for_exp.values():
@@ -458,7 +459,7 @@ def get_vote(msg):
                 people_votes += '\n@' + str(bot.get_chat_member(chat_id, player).user.username) \
                                 + ('👍' if players_id[chat_id].cur_voting_for_exp[player] == 1 else '👎🏿')
             bot_send_message(chat_id,
-                             (languages[msg.chat.id]['There will be such expedition'] if sum > 0 else languages[msg.chat.id]['There won`t be such expedition']) +
+                             (languages[chat_id]['There will be such expedition'] if sum > 0 else languages[chat_id]['There won`t be such expedition']) +
                              people_votes)
             if sum > 0:
                 players_id[chat_id].state = 'exp'
@@ -472,12 +473,12 @@ def get_vote(msg):
                 players_id[chat_id].king_rotation()
                 players_id[chat_id].kings_in_row += 1
                 if players_id[chat_id].kings_in_row == 5:
-                    bot_send_message(chat_id, languages[msg.chat.id]['RIP Avalon!!'])
+                    bot_send_message(chat_id, languages[chat_id]['RIP Avalon!!'])
                     string = ""
                     for item in players_id[chat_id].players.items():
-                        string += '\n@' + bot.get_chat_member(chat_id, item[0]).user.username + languages[msg.chat.id][' was '] + \
+                        string += '\n@' + bot.get_chat_member(chat_id, item[0]).user.username + languages[chat_id][' was '] + \
                                   ('❤️' if item[1] in tools.GameInfo.peaceful else '🖤') + item[1]
-                    bot_send_message(chat_id, languages[msg.chat.id]['Roles in this game:'] + string)
+                    bot_send_message(chat_id, languages[chat_id]['Roles in this game:'] + string)
                     for id in players_id[chat_id].players:
                         chat_of_player.pop(id)
                     players_id.pop(chat_id)
@@ -491,22 +492,22 @@ def get_vote(msg):
                     if players_id[chat_id].lady_lake and players_id[chat_id].lady_lake \
                             and i == players_id[chat_id].cur_lady % len(players_id[chat_id].order):
                         string += '👸'
-                bot_send_message(chat_id, languages[msg.chat.id]['Players order:'] + string)
-                bot_send_message(chat_id, languages[msg.chat.id]['New King is'] + ' @' +
+                bot_send_message(chat_id, languages[chat_id]['Players order:'] + string)
+                bot_send_message(chat_id, languages[chat_id]['New King is'] + ' @' +
                                  str(bot.get_chat_member(chat_id,
                                                          players_id[chat_id].order[
                                                              players_id[chat_id].cur_king]).user.username))
                 if players_id[chat_id].kings_in_row == 4:
-                    bot_send_message(chat_id, languages[msg.chat.id]['Next skipped expedition will result into Avalon collapse!!!'])
-                bot_send_message(chat_id, languages[msg.chat.id]['This expedition is for '] +
-                                 str(players_id[chat_id].exp_size[players_id[chat_id].get_num_of_exp()]) + languages[msg.chat.id][' people'])
+                    bot_send_message(chat_id, languages[chat_id]['Next skipped expedition will result into Avalon collapse!!!'])
+                bot_send_message(chat_id, languages[chat_id]['This expedition is for '] +
+                                 str(players_id[chat_id].exp_size[players_id[chat_id].get_num_of_exp()]) + languages[chat_id][' people'])
 
                 players_id[chat_id].cur_exp = []
                 for player in players_id[chat_id].players.keys():
                     players_id[chat_id].cur_voting_for_exp[player] = None
                 vote.send_voting(chat_id, players_id[chat_id])
         else:
-            bot.reply_to(msg, languages[msg.chat.id]['No voting for expedition right now!'])
+            bot.reply_to(msg, languages[chat_id]['No voting for expedition right now!'])
 
     except KeyError:
         print('bot durila')
@@ -527,10 +528,10 @@ def get_exp_choice(msg):
             return
         if players_id[chat_id].people_in_exp[msg.from_user.id] is None:
             if players_id[chat_id].players[msg.from_user.id] in tools.GameInfo.peaceful and \
-                    msg.text.split()[1] == languages[msg.chat.id]['Reject']:
-                bot.reply_to(msg, languages[msg.chat.id]['You can`t do it due to your role'])
+                    (msg.text.split()[1] == 'Reject' or msg.text.split()[1] == "Провалить" or msg.text.split()[1] == "Провалити"):
+                bot.reply_to(msg, languages[chat_id]['You can`t do it due to your role'])
                 return
-            players_id[chat_id].people_in_exp[msg.from_user.id] = 1 if msg.text.split()[1] == languages[msg.chat.id]['Approve'] else 0
+            players_id[chat_id].people_in_exp[msg.from_user.id] = 1 if (msg.text.split()[1] == 'Approve' or msg.text.split()[1] == 'Поддержать' or msg.text.split()[1] == 'Підтримати') else 0
         sum = 0
         for choice in players_id[chat_id].people_in_exp.values():
             if choice is None:
@@ -542,22 +543,22 @@ def get_exp_choice(msg):
                                           num_of_exp, len(players_id[chat_id].order))
         print(exp_res)
         if exp_res[0]:
-            bot_send_message(chat_id, languages[msg.chat.id]['Expedition was successful'] + '\n' + languages[msg.chat.id]['Num of black cards is '] + str(exp_res[1]) + '\n\n' +
-                             str(players_id[chat_id].successful_exp + 1) + languages[msg.chat.id][' successful expeditions'] + '\n' +
-                             str(players_id[chat_id].failed_exp) + languages[msg.chat.id][' failed expeditions'])
+            bot_send_message(chat_id, languages[chat_id]['Expedition was successful'] + '\n' + languages[chat_id]['Num of black cards is '] + str(exp_res[1]) + '\n\n' +
+                             str(players_id[chat_id].successful_exp + 1) + languages[chat_id][' successful expeditions'] + '\n' +
+                             str(players_id[chat_id].failed_exp) + languages[chat_id][' failed expeditions'])
             players_id[chat_id].successful_exp += 1
         else:
-            bot_send_message(chat_id, languages[msg.chat.id]['Expedition was failed'] + '\n' + languages[msg.chat.id]['Num of black cards is '] + str(exp_res[1]) + '\n\n' +
-                             str(players_id[chat_id].successful_exp) + languages[msg.chat.id][' successful expeditions'] + '\n' +
-                             str(players_id[chat_id].failed_exp + 1) + languages[msg.chat.id][' failed expeditions'])
+            bot_send_message(chat_id, languages[chat_id]['Expedition was failed'] + '\n' + languages[chat_id]['Num of black cards is '] + str(exp_res[1]) + '\n\n' +
+                             str(players_id[chat_id].successful_exp) + languages[chat_id][' successful expeditions'] + '\n' +
+                             str(players_id[chat_id].failed_exp + 1) + languages[chat_id][' failed expeditions'])
             players_id[chat_id].failed_exp += 1
         if players_id[chat_id].failed_exp == 3:
-            bot_send_message(chat_id, languages[msg.chat.id]['RIP Avalon!!'])
+            bot_send_message(chat_id, languages[chat_id]['RIP Avalon!!'])
             string = ""
             for item in players_id[chat_id].players.items():
-                string += '\n@' + bot.get_chat_member(chat_id, item[0]).user.username + languages[msg.chat.id][' was '] + \
+                string += '\n@' + bot.get_chat_member(chat_id, item[0]).user.username + languages[chat_id][' was '] + \
                           ('❤️' if item[1] in tools.GameInfo.peaceful else '🖤') + item[1]
-            bot_send_message(chat_id, languages[msg.chat.id]['Roles in this game:'] + string)
+            bot_send_message(chat_id, languages[chat_id]['Roles in this game:'] + string)
             for id in players_id[chat_id].players:
                 chat_of_player.pop(id)
             players_id.pop(chat_id)
@@ -570,10 +571,10 @@ def get_exp_choice(msg):
                     btn = telebot.types.InlineKeyboardButton(text=nickname,
                                                              callback_data='a' + nickname + ' ' + str(chat_id))
                     keyboard.add(btn)
-            bot_send_message(chat_id, languages[msg.chat.id]['Time to shot for Assassin'])
+            bot_send_message(chat_id, languages[chat_id]['Time to shot for Assassin'])
             for i in players_id[chat_id].players:
                 if players_id[chat_id].players[i] == "Assassin":
-                    bot_send_message(i, languages[msg.chat.id]["Who do you want to kill?"], reply_markup=keyboard)
+                    bot_send_message(i, languages[chat_id]["Who do you want to kill?"], reply_markup=keyboard)
 
         else:
             players_id[chat_id].state = 'game'
@@ -586,13 +587,13 @@ def get_exp_choice(msg):
                     string += '👑'
                 if players_id[chat_id].lady_lake and i == players_id[chat_id].cur_lady % len(players_id[chat_id].order):
                     string += '👸'
-            bot_send_message(chat_id, languages[msg.chat.id]['Players order:'] + string)
-            bot_send_message(chat_id, languages[msg.chat.id]['New King is'] + ' @' +
+            bot_send_message(chat_id, languages[chat_id]['Players order:'] + string)
+            bot_send_message(chat_id, languages[chat_id]['New King is'] + ' @' +
                              str(bot.get_chat_member(chat_id,
                                                      players_id[chat_id].order[
                                                          players_id[chat_id].cur_king]).user.username))
-            bot_send_message(chat_id, languages[msg.chat.id]['This expedition is for '] +
-                             str(players_id[chat_id].exp_size[players_id[chat_id].get_num_of_exp()]) + languages[msg.chat.id][' people'])
+            bot_send_message(chat_id, languages[chat_id]['This expedition is for '] +
+                             str(players_id[chat_id].exp_size[players_id[chat_id].get_num_of_exp()]) + languages[chat_id][' people'])
             if players_id[chat_id].get_num_of_exp() > 1 and players_id[chat_id].lady_lake and \
                     len(players_id[chat_id].checked) < len(players_id[chat_id].order):
                 gameplay.lady_check(chat_id, players_id[chat_id])

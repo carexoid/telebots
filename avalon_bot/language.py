@@ -86,7 +86,7 @@ class Dictionary(metaclass=DictSingletonMeta):
                              "важно анализировать игру и экспедиции, ведь вы можете пользоваться тем, "
                              'что Мерлин не знает, чьим союзником '
                              'вы являетесь.',
-                             "Мордред допамагає темній стороні, адже Мерлін не знає про нього. Будучи Мордредом,  "
+                             "Мордред допомагає темній стороні, адже Мерлін не знає про нього. Будучи Мордредом,  "
                              "важливо аналізувати гру та експедиції, адже ви можете користуватись тим, "
                              'що Мерлін не знає, на якій стороні '
                              'ви граєте'],
@@ -100,7 +100,7 @@ class Dictionary(metaclass=DictSingletonMeta):
                    "Lady of the Lake has checked": ["Lady of the Lake has checked", "Леди Озеро проверила", "Леді Озеро перевірила"],
                    " is servant of Arthur": [" is servant of Arthur", " — союзник Артура", " — союзник Артура"],
                    " is servant of Mordred": [" is servant of Mordred", " — союзник Мордреда", " — союзник Мордреда"],
-                   " is new Lady of the Lake": [" is new Lady of the Lake", " новая Леди Озеро", "нова Леді Озеро"],
+                   " is new Lady of the Lake": [" is new Lady of the Lake", " новая Леди Озеро", " нова Леді Озеро"],
                    "Don`t touch old buttons, run /start_registration first!": ["Don`t touch old buttons, run /start_registration first!", "Не нажимай старые кнопки, напиши /start_registration для начала!", "Не натискай старі кнопки, почни з /start_registration!"],
                    'No game to be aborted': ['No game to be aborted', 'Нет игры для отмены', 'Немає гри для скасування'],
                    "I like this expedition": ["I like this expedition", "Мне нравится эта экспедиция", "Мені подобається ця експедиція"],
@@ -116,13 +116,13 @@ class Dictionary(metaclass=DictSingletonMeta):
                    'You can`t do it due to your role': ['You can`t do it due to your role', 'Вы не можете делать это в соответствии с ролью', 'Ви не можете робити це у зв`язку з роллю'],
                    'Expedition was successful': ['Expedition was successful', 'Экспедиция прошла успешно', 'Експедиція пройшла успішно'],
                    'Num of black cards is ': ['Num of black cards is ', 'Количество черных карт — ', 'Кількість чорних карток — '],
-                   ' successful expeditions': [' successful expeditions', ' успешных экспедиций', 'вдалих експедицій'],
+                   ' successful expeditions': [' successful expeditions', ' успешных экспедиций', ' вдалих експедицій'],
                    ' failed expeditions': [' failed expeditions', ' проваленных экспедиций', ' провалених експедицій'],
                    'Expedition was failed': ['Expedition was failed', "Экспедиция провалена", "Екапедиція провлена"],
                    ' was ': [' was '],
                    'Time to shot for Assassin': ['Time to shot for Assassin', "Время для выстрела Ассасина", "Час для вистрілу Асасіна"],
                    "Who do you want to kill?": ["Who do you want to kill?", "Кого вы хотите убить?", "Кого ви хочете вбити?"],
-                   'This expedition is for ': ['This expedition is for ', "Это экспедиция для", "Ця експедиція для "],
+                   'This expedition is for ': ['This expedition is for ', "Это экспедиция для ", "Ця експедиція для "],
                    ' people': [' people', " человек", " людей"],
                    'You are a loyal servant of King Arthur, so your main goal is complete the missions'
                                 : ['You are a loyal servant of King Arthur, so your main goal is complete the missions',
@@ -217,7 +217,7 @@ class Dictionary(metaclass=DictSingletonMeta):
                              "важно анализировать игру и экспедиции, ведь вы можете пользоваться тем, "
                              'что Мерлин не знает, чьим союзником '
                              'вы являетесь.',
-                             "Мордред допамагає темній стороні, адже Мерлін не знає про нього, але наявність цієї ролі "
+                             "Мордред допомагає темній стороні, адже Мерлін не знає про нього, але наявність цієї ролі "
                              "поскладнює процес пошуку Мерліна, адже останній більше не може завжди голосувати вірно. "
                              "Зазвичай, додання Мордреда допомагає темній стороні перемагати частіше просто заваливши 3 "
                              "експедиції але при цьому поскладнює процес пошуку Мерліна. Будучи Мордредом,  "
@@ -249,8 +249,7 @@ class Dictionary(metaclass=DictSingletonMeta):
                             "але якщо ви щось пропустили, варто дивитись і за результатами голосувань, щоб вияснити,"
                             "хто є Мерліном"],
                    "Your role is ": ["Your role is ", "Ваша роль — ", "Ваша роль — "],
-                   ' is minion of Mordred': [' is minion of Mordred'],
-                   'Minions of Mordred are:': ['Minions of Mordred are:'],
+                   ' is minion of Mordred': [' is minion of Mordred', "союзник Мордреда", "союзник Мордреда"],
                    'Your teammates are:': ['Your teammates are:', "Ваша команда:", "Ваша команда:"],
                    'Merlin is one of them:': ['Merlin is one of them:', "Мерлин один из них:", "Мерлін один з них:"],
                    'Do you like this expedition?': ['Do you like this expedition?', "Вам нравится эта экспедиция?", "Вам подобається ця експедиція?"],
@@ -273,7 +272,14 @@ class Dictionary(metaclass=DictSingletonMeta):
                    "English": ["English", "Английский", "Англійська"],
                    "Russian": ["Russian", "Русский", "Російська"],
                    "Ukrainian": ["Ukrainian", "Украинский", "Українська"],
-                   'like': ['like', 'нравится', 'подобається']
+                   'like': ['like', 'нравится', 'подобається'],
+                   'Merlin': ['Merlin', 'Мерлин','Мерлін'],
+                   'Percival': ['Percival','Персиваль','Персиваль'],
+                   'Loyal Servant of Arthur': ['Loyal Servant of Arthur', 'Союзник Артура', 'Союзник Артура'],
+                   'Minion of Mordred': ['Minion of Mordred', 'Союзник Мордреда', 'Союзник Мордреда'],
+                   'Assassin': ['Assassin', "Ассассин", 'Асасін'],
+        'Minions of Mordred are:': ['Minions of Mordred are:', 'Союзники Мордреда:', 'Союзники Мордреда:'],
+
 
                   }
 

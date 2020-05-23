@@ -83,9 +83,9 @@ def make_roles(roles, additional, chat_id):
         roles[key] = roles_list[index]
         index = index + 1
     for key in roles:
-        send_text = languages[chat_id]["Your role is "] + roles[key]
+        send_text = languages[chat_id]["Your role is "] + languages[chat_id][roles[key]]
         bot_send_message(key, send_text)
-        bot_send_message(key, roles_description[roles[key]])
+        bot_send_message(key, languages[chat_id][roles_description[roles[key]]])
         teamlist = ''
         mordred = ''
         oberon = ''
